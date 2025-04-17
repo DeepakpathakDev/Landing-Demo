@@ -1,795 +1,662 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>StockInsight - Smart Stock Market Analysis</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StockInsight - Advanced Market Analysis</title>
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: { primary: "#0066cc", secondary: "#00a651" },
-            borderRadius: {
-              none: "0px",
-              sm: "4px",
-              DEFAULT: "8px",
-              md: "12px",
-              lg: "16px",
-              xl: "20px",
-              "2xl": "24px",
-              "3xl": "32px",
-              full: "9999px",
-              button: "8px",
-            },
-          },
-        },
-      };
-    </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
+    <script>tailwind.config={theme:{extend:{colors:{primary:'#4f46e5',secondary:'#10b981'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
     <style>
-      :where([class^="ri-"])::before { content: "\f3c2"; }
-      body {
-        font-family: 'Inter', sans-serif;
-        background-color: #121212;
-        color: #e0e0e0;
-      }
-      .chart-container {
-        width: 100%;
-        height: 300px;
-      }
-      .positive {
-        color: #00a651;
-      }
-      .negative {
-        color: #ff4d4d;
-      }
-      .custom-switch {
-        position: relative;
-        display: inline-block;
-        width: 40px;
-        height: 20px;
-      }
-      .custom-switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-      }
-      .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #2b2b2b;
-        transition: .4s;
-        border-radius: 20px;
-      }
-      .slider:before {
-        position: absolute;
-        content: "";
-        height: 16px;
-        width: 16px;
-        left: 2px;
-        bottom: 2px;
-        background-color: white;
-        transition: .4s;
-        border-radius: 50%;
-      }
-      input:checked + .slider {
-        background-color: #0066cc;
-      }
-      input:checked + .slider:before {
-        transform: translateX(20px);
-      }
-      .custom-checkbox {
-        position: relative;
-        padding-left: 28px;
-        cursor: pointer;
-        user-select: none;
-      }
-      .custom-checkbox input {
-        position: absolute;
-        opacity: 0;
-        cursor: pointer;
-        height: 0;
-        width: 0;
-      }
-      .checkmark {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 20px;
-        width: 20px;
-        background-color: #2b2b2b;
-        border-radius: 4px;
-      }
-      .custom-checkbox:hover input ~ .checkmark {
-        background-color: #3b3b3b;
-      }
-      .custom-checkbox input:checked ~ .checkmark {
-        background-color: #0066cc;
-      }
-      .checkmark:after {
-        content: "";
-        position: absolute;
-        display: none;
-      }
-      .custom-checkbox input:checked ~ .checkmark:after {
-        display: block;
-      }
-      .custom-checkbox .checkmark:after {
-        left: 7px;
-        top: 3px;
-        width: 6px;
-        height: 10px;
-        border: solid white;
-        border-width: 0 2px 2px 0;
-        transform: rotate(45deg);
-      }
-      .tab-button {
-        background-color: transparent;
-        border: none;
-        color: #a0a0a0;
-        padding: 8px 16px;
-        cursor: pointer;
-        transition: all 0.3s;
-      }
-      .tab-button.active {
-        color: white;
-        border-bottom: 2px solid #0066cc;
-      }
+        :where([class^="ri-"])::before { content: "\f3c2"; }
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+        .hero-wave {
+            position: absolute;
+            width: 100%;
+            height: 120px;
+            bottom: -50px;
+            left: 0;
+            z-index: 0;
+        }
+        .dashboard-glow {
+            box-shadow: 0 0 30px rgba(79, 70, 229, 0.2);
+        }
+        .feature-card {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.15);
+        }
+        .testimonial-card {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(10px);
+        }
+        .client-logo {
+            filter: grayscale(100%) brightness(2);
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+        .client-logo:hover {
+            filter: grayscale(0%) brightness(2);
+            opacity: 1;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #4f46e5, #10b981);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        input:focus {
+            outline: none;
+        }
     </style>
-  </head>
-  <body>
-    <header class="bg-[#1a1a1a] border-b border-[#333333]">
-      <div class="flex items-center justify-between px-4 py-2">
+</head>
+<body>
+    <!-- Header Navigation -->
+    <header
+      class="w-full py-4 px-6 md:px-12 fixed top-0 left-0 z-50 bg-slate-900/80 backdrop-blur-md"
+    >
+      <div class="flex items-center justify-between">
         <div class="flex items-center">
-          <div class="text-2xl font-['Pacifico'] text-white mr-8">StockInsight</div>
-          <div class="relative">
-            <input type="text" id="searchInput" placeholder="Search for stocks, symbols or companies" class="bg-[#2b2b2b] text-white px-4 py-2 rounded w-80 border-none focus:outline-none focus:ring-1 focus:ring-primary">
-            <div class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 flex items-center justify-center">
-              <i class="ri-search-line text-[#a0a0a0]"></i>
-            </div>
-          </div>
+          <a
+            href="index.html"
+            class="text-2xl font-['Pacifico'] text-white mr-2"
+            >logo</a
+          >
         </div>
-        <div class="flex items-center space-x-6">
-          <a href="/news" class="text-[#a0a0a0] hover:text-white">News</a>
-          <a href="/finance" class="text-[#a0a0a0] hover:text-white">Finance</a>
-          <a href="#" class="text-[#a0a0a0] hover:text-white">Sports</a>
-          <a href="#" class="text-[#a0a0a0] hover:text-white">More</a>
-          <button class="bg-primary text-white px-4 py-1.5 !rounded-button whitespace-nowrap">Sign In</button>
+        <nav class="hidden md:flex items-center space-x-8">
+          <a
+            href="index.html"
+            class="text-gray-300 hover:text-primary transition"
+            >Home</a
+          >
+          <a
+            href="about.html"
+            class="text-gray-300 hover:text-primary transition"
+            >About</a
+          >
+          <a href="market.html" class="text-white hover:text-primary transition"
+            >Market</a
+          >
+          <a
+            href="index.html#features"
+            class="text-gray-300 hover:text-primary transition"
+            >Features</a
+          >
+          <a
+            href="index.html#pricing"
+            class="text-gray-300 hover:text-primary transition"
+            >Pricing</a
+          >
+          <a
+            href="index.html#contact"
+            class="text-gray-300 hover:text-primary transition"
+            >Contact</a
+          >
+        </nav>
+        <div class="flex items-center">
+          <button
+            class="bg-gradient-to-r from-primary to-indigo-600 text-white px-6 py-2 !rounded-button whitespace-nowrap"
+          >
+            Sign In
+          </button>
+        </div>
+        <div class="md:hidden flex items-center">
+          <button id="mobileMenuButton" class="text-white">
+            <i class="ri-menu-line ri-2x"></i>
+          </button>
         </div>
       </div>
-      <nav class="flex px-4 py-1 bg-[#1a1a1a] text-sm">
-        <a href="#" class="px-4 py-2 text-white border-b-2 border-primary">Stocks</a>
-        <a href="#" class="px-4 py-2 text-[#a0a0a0] hover:text-white">Mutual Funds</a>
-        <a href="#" class="px-4 py-2 text-[#a0a0a0] hover:text-white">ETFs</a>
-        <a href="#" class="px-4 py-2 text-[#a0a0a0] hover:text-white">Commodities</a>
-        <a href="#" class="px-4 py-2 text-[#a0a0a0] hover:text-white">Forex</a>
-        <a href="#" class="px-4 py-2 text-[#a0a0a0] hover:text-white">Crypto</a>
-        <a href="#" class="px-4 py-2 text-[#a0a0a0] hover:text-white">My Portfolio</a>
-      </nav>
+      <div
+        id="mobileMenu"
+        class="hidden md:hidden absolute top-full left-0 w-full bg-slate-900/95 backdrop-blur-md"
+      >
+        <div class="flex flex-col p-4">
+          <a
+            href="index.html"
+            class="text-gray-300 hover:text-primary transition py-2"
+            >Home</a
+          >
+          <a
+            href="about.html"
+            class="text-gray-300 hover:text-primary transition py-2"
+            >About</a
+          >
+          <a
+            href="market.html"
+            class="text-white hover:text-primary transition py-2"
+            >Market</a
+          >
+          <a
+            href="index.html#features"
+            class="text-gray-300 hover:text-primary transition py-2"
+            >Features</a
+          >
+          <a
+            href="index.html#pricing"
+            class="text-gray-300 hover:text-primary transition py-2"
+            >Pricing</a
+          >
+          <a
+            href="index.html#contact"
+            class="text-gray-300 hover:text-primary transition py-2"
+            >Contact</a
+          >
+          <button
+            class="bg-gradient-to-r from-primary to-indigo-600 text-white px-6 py-2 !rounded-button whitespace-nowrap mt-4"
+          >
+            Sign In
+          </button>
+        </div>
+      </div>
     </header>
-    <main class="px-4 py-2">
-      <div class="text-sm text-[#a0a0a0] mb-2">
-        <span>NSE Index > </span>
-        <span>India > </span>
-        <span>NIFTY 50</span>
-      </div>
-      <div class="grid grid-cols-4 gap-4">
-        <div class="col-span-3">
-          <div class="bg-[#1a1a1a] p-4 rounded mb-4">
-            <div class="flex justify-between items-start mb-4">
-              <div>
-                <div class="flex items-center">
-                  <h1 class="text-xl font-bold mr-2">NIFTY 50 ("NIFTY")</h1>
-                  <button class="bg-[#2b2b2b] text-[#a0a0a0] text-xs px-2 py-1 !rounded-button whitespace-nowrap">+ Follow</button>
+    <!-- Hero Section -->
+    <section class="relative w-full py-16 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="flex flex-col items-center md:items-start text-center md:text-left mb-12">
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">Start trading with real-time market data</h1>
+                <p class="text-gray-300 text-lg mb-8 max-w-2xl">Advanced platform for analyzing stocks and making informed investment decisions</p>
+                <div class="flex flex-wrap gap-4">
+                    <button class="bg-gradient-to-r from-primary to-indigo-600 text-white px-6 py-3 !rounded-button whitespace-nowrap">Try for free</button>
+                    <button class="bg-transparent border border-gray-500 text-white px-6 py-3 !rounded-button flex items-center whitespace-nowrap">
+                        <span class="w-5 h-5 flex items-center justify-center mr-2">
+                            <i class="ri-play-fill ri-sm"></i>
+                        </span>
+                        Watch demo
+                    </button>
                 </div>
-                <div class="flex items-end mt-1" id="niftyData">
-                  <span class="text-2xl font-bold mr-2">Loading...</span>
-                </div>
-              </div>
-              <div class="flex items-center space-x-2">
-                <button class="bg-[#2b2b2b] hover:bg-[#333] p-2 rounded">
-                  <div class="w-6 h-6 flex items-center justify-center">
-                    <i class="ri-search-line text-[#a0a0a0]"></i>
-                  </div>
-                </button>
-                <button class="bg-[#2b2b2b] hover:bg-[#333] p-2 rounded">
-                  <div class="w-6 h-6 flex items-center justify-center">
-                    <i class="ri-notification-line text-[#a0a0a0]"></i>
-                  </div>
-                </button>
-                <button class="bg-[#2b2b2b] hover:bg-[#333] p-2 rounded">
-                  <div class="w-6 h-6 flex items-center justify-center">
-                    <i class="ri-settings-3-line text-[#a0a0a0]"></i>
-                  </div>
-                </button>
-              </div>
             </div>
-            <div class="flex space-x-2 mb-4">
-              <button class="tab-button active" data-period="1D">1D</button>
-              <button class="tab-button" data-period="5D">5D</button>
-              <button class="tab-button" data-period="1M">1M</button>
-              <button class="tab-button" data-period="YTD">YTD</button>
-              <button class="tab-button" data-period="1Y">1Y</button>
-              <button class="tab-button" data-period="5Y">5Y</button>
-              <button class="tab-button" data-period="MAX">MAX</button>
+            
+            <div class="relative mt-8 dashboard-glow rounded-lg overflow-hidden z-10">
+                <img src="https://public.readdy.ai/ai/img_res/50790e3cf2cbbc1348557472b44fdb07.jpg" alt="Financial Dashboard" class="w-full h-auto rounded-lg object-cover">
             </div>
-            <div class="chart-container" id="mainChart"></div>
-            <div class="grid grid-cols-5 gap-4 mt-4 text-sm" id="niftyDetails">
-              <div>
-                <div class="text-[#a0a0a0]">Previous Close</div>
-                <div>Loading...</div>
-              </div>
-              <div>
-                <div class="text-[#a0a0a0]">Open</div>
-                <div>Loading...</div>
-              </div>
-              <div>
-                <div class="text-[#a0a0a0]">Day's Range</div>
-                <div>Loading...</div>
-              </div>
-              <div>
-                <div class="text-[#a0a0a0]">52 Week Range</div>
-                <div>Loading...</div>
-              </div>
-              <div>
-                <div class="text-[#a0a0a0]">Avg. Volume</div>
-                <div>Loading...</div>
-              </div>
-            </div>
-          </div>
-          <div class="bg-[#1a1a1a] p-4 rounded mb-4">
-            <h2 class="text-lg font-bold mb-4">People Also Watch</h2>
-            <div class="grid grid-cols-5 gap-4" id="peopleAlsoWatch">
-              <div class="bg-[#222222] p-3 rounded">
-                <div class="font-bold">Loading...</div>
-                <div class="text-sm">Loading...</div>
-                <div class="text-lg font-bold">Loading...</div>
-                <div class="text-sm">Loading...</div>
-              </div>
-              <div class="bg-[#222222] p-3 rounded">
-                <div class="font-bold">Loading...</div>
-                <div class="text-sm">Loading...</div>
-                <div class="text-lg font-bold">Loading...</div>
-                <div class="text-sm">Loading...</div>
-              </div>
-              <div class="bg-[#222222] p-3 rounded">
-                <div class="font-bold">Loading...</div>
-                <div class="text-sm">Loading...</div>
-                <div class="text-lg font-bold">Loading...</div>
-                <div class="text-sm">Loading...</div>
-              </div>
-              <div class="bg-[#222222] p-3 rounded">
-                <div class="font-bold">Loading...</div>
-                <div class="text-sm">Loading...</div>
-                <div class="text-lg font-bold">Loading...</div>
-                <div class="text-sm">Loading...</div>
-              </div>
-              <div class="bg-[#222222] p-3 rounded">
-                <div class="font-bold">Loading...</div>
-                <div class="text-sm">Loading...</div>
-                <div class="text-lg font-bold">Loading...</div>
-                <div class="text-sm">Loading...</div>
-              </div>
-            </div>
-          </div>
-          <div class="bg-[#1a1a1a] p-4 rounded">
-            <div class="flex justify-between items-center mb-4">
-              <h2 class="text-lg font-bold">Recent News: NIFTY</h2>
-              <a href="#" class="text-primary text-sm">View More →</a>
-            </div>
-            <div class="space-y-4">
-              <div class="flex gap-4">
-                <div class="flex-1">
-                  <h3 class="font-bold hover:text-primary cursor-pointer">Indian markets close higher as banking stocks surge</h3>
-                  <div class="text-sm text-[#a0a0a0] mt-1">Financial Express • 45 minutes ago</div>
-                </div>
-                <img src="https://public.readdy.ai/ai/img_res/0143d70c293c5e0afdfadda349367eff.jpg" alt="Stock market news" class="w-[120px] h-[80px] object-cover rounded">
-              </div>
-              <div class="flex gap-4">
-                <div class="flex-1">
-                  <h3 class="font-bold hover:text-primary cursor-pointer">NIFTY 50 hits new all-time high as foreign investors continue buying</h3>
-                  <div class="text-sm text-[#a0a0a0] mt-1">Economic Times • 1 hour ago</div>
-                </div>
-                <img src="https://public.readdy.ai/ai/img_res/f81689b917dbc00b8f5b479593a23272.jpg" alt="Crypto news" class="w-[120px] h-[80px] object-cover rounded">
-              </div>
-              <div class="flex gap-4">
-                <div class="flex-1">
-                  <h3 class="font-bold hover:text-primary cursor-pointer">Global stock markets rally as inflation concerns ease</h3>
-                  <div class="text-sm text-[#a0a0a0] mt-1">Business Standard • 90 minutes ago</div>
-                </div>
-                <img src="https://public.readdy.ai/ai/img_res/96e1c0e10b90789c277bd263942c4e67.jpg" alt="Global markets" class="w-[120px] h-[80px] object-cover rounded">
-              </div>
-              <div class="flex gap-4">
-                <div class="flex-1">
-                  <h3 class="font-bold hover:text-primary cursor-pointer">RBI policy decision will 'surely have economic impact' in India - Experts</h3>
-                  <div class="text-sm text-[#a0a0a0] mt-1">Reuters Finance • 2 hours ago</div>
-                </div>
-                <img src="https://public.readdy.ai/ai/img_res/f020da81fc76aa4e344523ae4c9c01df.jpg" alt="Political news" class="w-[120px] h-[80px] object-cover rounded">
-              </div>
-              <div class="flex gap-4">
-                <div class="flex-1">
-                  <h3 class="font-bold hover:text-primary cursor-pointer">How RBI's policy will impact your finances and the markets</h3>
-                  <div class="text-sm text-[#a0a0a0] mt-1">Moneycontrol • 3 hours ago</div>
-                </div>
-                <img src="https://public.readdy.ai/ai/img_res/f8604ab9c11adcdd66870af29cbc2ef7.jpg" alt="Financial impact" class="w-[120px] h-[80px] object-cover rounded">
-              </div>
-            </div>
-          </div>
         </div>
-        <div class="col-span-1">
-          <div class="bg-[#1a1a1a] p-4 rounded mb-4">
-            <h2 class="text-lg font-bold mb-4">Market Status</h2>
-            <div class="space-y-3" id="marketStatus">
-              <div class="flex justify-between">
-                <div>Loading...</div>
-                <div>Loading...</div>
-              </div>
-            </div>
-          </div>
-          <div class="bg-[#1a1a1a] p-4 rounded mb-4">
-            <h2 class="text-lg font-bold mb-4">My portfolio</h2>
-            <p class="text-sm text-[#a0a0a0] mb-4">Sign in to access your portfolio</p>
-            <button class="w-full bg-primary text-white py-2 !rounded-button whitespace-nowrap">Sign In</button>
-          </div>
-          <div class="bg-[#1a1a1a] p-4 rounded mb-4">
-            <h2 class="text-lg font-bold mb-4">Top gainers</h2>
-            <div class="space-y-3 text-sm" id="topGainers">
-              <div class="flex justify-between items-center">
-                <div>Loading...</div>
-                <div class="positive">Loading...</div>
-              </div>
-              <div class="flex justify-between items-center">
-                <div>Loading...</div>
-                <div class="positive">Loading...</div>
-              </div>
-              <div class="flex justify-between items-center">
-                <div>Loading...</div>
-                <div class="positive">Loading...</div>
-              </div>
-              <div class="flex justify-between items-center">
-                <div>Loading...</div>
-                <div class="positive">Loading...</div>
-              </div>
-              <div class="flex justify-between items-center">
-                <div>Loading...</div>
-                <div class="positive">Loading...</div>
-              </div>
-            </div>
-          </div>
-          <div class="bg-[#1a1a1a] p-4 rounded mb-4">
-            <h2 class="text-lg font-bold mb-4">Top losers</h2>
-            <div class="space-y-3 text-sm" id="topLosers">
-              <div class="flex justify-between items-center">
-                <div>Loading...</div>
-                <div class="negative">Loading...</div>
-              </div>
-              <div class="flex justify-between items-center">
-                <div>Loading...</div>
-                <div class="negative">Loading...</div>
-              </div>
-              <div class="flex justify-between items-center">
-                <div>Loading...</div>
-                <div class="negative">Loading...</div>
-              </div>
-              <div class="flex justify-between items-center">
-                <div>Loading...</div>
-                <div class="negative">Loading...</div>
-              </div>
-              <div class="flex justify-between items-center">
-                <div>Loading...</div>
-                <div class="negative">Loading...</div>
-              </div>
-            </div>
-          </div>
+        
+        <div class="hero-wave">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none" class="w-full h-full">
+                <path fill="rgba(30, 41, 59, 0.3)" fill-opacity="1" d="M0,96L48,112C96,128,192,160,288,181.3C384,203,480,213,576,202.7C672,192,768,160,864,165.3C960,171,1056,213,1152,213.3C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
         </div>
-      </div>
-      <div class="bg-[#1a1a1a] p-4 rounded mt-4">
-        <h2 class="text-lg font-bold mb-4">Trending Indices</h2>
-        <div class="grid grid-cols-6 gap-4" id="trendingIndices">
-          <div class="bg-[#222222] p-3 rounded">
-            <div class="font-bold">Loading...</div>
-            <div class="text-sm">Loading...</div>
-            <div class="text-lg font-bold">Loading...</div>
-            <div class="text-sm">Loading...</div>
-          </div>
-          <div class="bg-[#222222] p-3 rounded">
-            <div class="font-bold">Loading...</div>
-            <div class="text-sm">Loading...</div>
-            <div class="text-lg font-bold">Loading...</div>
-            <div class="text-sm">Loading...</div>
-          </div>
-          <div class="bg-[#222222] p-3 rounded">
-            <div class="font-bold">Loading...</div>
-            <div class="text-sm">Loading...</div>
-            <div class="text-lg font-bold">Loading...</div>
-            <div class="text-sm">Loading...</div>
-          </div>
-          <div class="bg-[#222222] p-3 rounded">
-            <div class="font-bold">Loading...</div>
-            <div class="text-sm">Loading...</div>
-            <div class="text-lg font-bold">Loading...</div>
-            <div class="text-sm">Loading...</div>
-          </div>
-          <div class="bg-[#222222] p-3 rounded">
-            <div class="font-bold">Loading...</div>
-            <div class="text-sm">Loading...</div>
-            <div class="text-lg font-bold">Loading...</div>
-            <div class="text-sm">Loading...</div>
-          </div>
-          <div class="bg-[#222222] p-3 rounded">
-            <div class="font-bold">Loading...</div>
-            <div class="text-sm">Loading...</div>
-            <div class="text-lg font-bold">Loading...</div>
-            <div class="text-sm">Loading...</div>
-          </div>
-        </div>
-      </div>
-    </main>
-    <footer class="bg-[#1a1a1a] mt-8 py-8 px-4 text-[#a0a0a0] text-sm">
-      <div class="max-w-7xl mx-auto">
-        <div class="flex justify-between mb-8">
-          <div>
-            <div class="text-xl font-['Pacifico'] text-white mb-4">StockInsight</div>
-            <p>© 2025 StockInsight. All rights reserved.</p>
-          </div>
-          <div class="flex space-x-8">
-            <div>
-              <h3 class="text-white font-bold mb-3">POPULAR QUOTES</h3>
-              <ul class="space-y-2">
-                <li><a href="#" class="hover:text-white">Stock Index</a></li>
-                <li><a href="#" class="hover:text-white">Popular Stocks</a></li>
-                <li><a href="#" class="hover:text-white">Currencies</a></li>
-                <li><a href="#" class="hover:text-white">Crypto</a></li>
-                <li><a href="#" class="hover:text-white">ETFs</a></li>
-                <li><a href="#" class="hover:text-white">Futures</a></li>
-              </ul>
+    </section>
+
+    <!-- Features Section -->
+    <section class="relative w-full py-20 bg-slate-900/30">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="mb-16">
+                <h2 class="text-3xl font-bold mb-4">A few reasons why <span class="gradient-text">StockInsight</span> might be the right fit</h2>
+                <p class="text-gray-400 max-w-2xl">Our platform combines cutting-edge technology with comprehensive market data to provide you with the tools you need to make informed investment decisions.</p>
             </div>
-            <div>
-              <h3 class="text-white font-bold mb-3">EXPLORE MORE</h3>
-              <ul class="space-y-2">
-                <li><a href="#" class="hover:text-white">Markets</a></li>
-                <li><a href="#" class="hover:text-white">News</a></li>
-                <li><a href="#" class="hover:text-white">Videos</a></li>
-                <li><a href="#" class="hover:text-white">Screeners</a></li>
-                <li><a href="#" class="hover:text-white">Personal Finance</a></li>
-                <li><a href="#" class="hover:text-white">Crypto</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 class="text-white font-bold mb-3">ABOUT</h3>
-              <ul class="space-y-2">
-                <li><a href="#" class="hover:text-white">About StockInsight</a></li>
-                <li><a href="#" class="hover:text-white">Careers</a></li>
-                <li><a href="#" class="hover:text-white">Contact</a></li>
-                <li><a href="#" class="hover:text-white">Feedback</a></li>
-                <li><a href="#" class="hover:text-white">Help</a></li>
-                <li><a href="#" class="hover:text-white">Terms and Privacy Policy</a></li>
-                <li><a href="#" class="hover:text-white">Privacy Dashboard</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="flex items-center space-x-4">
-          <a href="#" class="hover:text-white">
-            <div class="w-8 h-8 flex items-center justify-center bg-[#2b2b2b] rounded-full">
-              <i class="ri-twitter-fill"></i>
-            </div>
-          </a>
-          <a href="#" class="hover:text-white">
-            <div class="w-8 h-8 flex items-center justify-center bg-[#2b2b2b] rounded-full">
-              <i class="ri-facebook-fill"></i>
-            </div>
-          </a>
-          <a href="#" class="hover:text-white">
-            <div class="w-8 h-8 flex items-center justify-center bg-[#2b2b2b] rounded-full">
-              <i class="ri-instagram-fill"></i>
-            </div>
-          </a>
-        </div>
-      </div>
-    </footer>
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        let currentStock = 'NIFTY 50';
-        let currentPeriod = '1D';
-        let mainChart = null;
-
-        // Initialize chart
-        function initChart() {
-          if (mainChart) {
-            mainChart.dispose();
-          }
-          mainChart = echarts.init(document.getElementById('mainChart'));
-        }
-
-        // Update chart data
-        function updateChart(symbol, period) {
-          fetch(`/api/stock-data?symbol=${encodeURIComponent(symbol)}`)
-            .then(response => response.json())
-            .then(data => {
-              // Update price and change
-              const niftyData = document.getElementById('niftyData');
-              const changeClass = data.change >= 0 ? 'positive' : 'negative';
-              niftyData.innerHTML = `
-                <span class="text-2xl font-bold mr-2">${data.price.toFixed(2)}</span>
-                <span class="${changeClass}">
-                  ${data.change >= 0 ? '+' : ''}${data.change.toFixed(2)} (${data.changePercent.toFixed(2)}%)
-                </span>
-              `;
-
-              // Update details
-              const niftyDetails = document.getElementById('niftyDetails');
-              niftyDetails.innerHTML = `
-                <div>
-                  <div class="text-[#a0a0a0]">Previous Close</div>
-                  <div>${data.previousClose.toFixed(2)}</div>
-                </div>
-                <div>
-                  <div class="text-[#a0a0a0]">Open</div>
-                  <div>${data.open.toFixed(2)}</div>
-                </div>
-                <div>
-                  <div class="text-[#a0a0a0]">Day's Range</div>
-                  <div>${data.low.toFixed(2)} - ${data.high.toFixed(2)}</div>
-                </div>
-                <div>
-                  <div class="text-[#a0a0a0]">Volume</div>
-                  <div>${data.volume.toLocaleString()}</div>
-                </div>
-                <div>
-                  <div class="text-[#a0a0a0]">Market Cap</div>
-                  <div>${(data.marketCap / 1e9).toFixed(2)}B</div>
-                </div>
-              `;
-
-              // Update chart
-              const option = {
-                animation: false,
-                grid: {
-                  left: 0,
-                  right: 0,
-                  top: 10,
-                  bottom: 30
-                },
-                xAxis: {
-                  type: 'category',
-                  data: [data.timestamp],
-                  axisLine: {
-                    lineStyle: {
-                      color: '#333'
-                    }
-                  },
-                  axisLabel: {
-                    color: '#a0a0a0'
-                  },
-                  splitLine: {
-                    show: false
-                  }
-                },
-                yAxis: {
-                  type: 'value',
-                  min: data.low,
-                  max: data.high,
-                  axisLine: {
-                    show: false
-                  },
-                  axisLabel: {
-                    color: '#a0a0a0'
-                  },
-                  splitLine: {
-                    lineStyle: {
-                      color: '#333',
-                      type: 'dashed'
-                    }
-                  }
-                },
-                tooltip: {
-                  trigger: 'axis',
-                  backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                  textStyle: {
-                    color: '#1f2937'
-                  },
-                  formatter: function(params) {
-                    return `${params[0].name}<br/>${params[0].value.toFixed(2)}`;
-                  }
-                },
-                series: [{
-                  data: [data.price],
-                  type: 'line',
-                  smooth: true,
-                  symbol: 'none',
-                  lineStyle: {
-                    color: data.change >= 0 ? '#00a651' : '#ff4d4d',
-                    width: 2
-                  },
-                  areaStyle: {
-                    color: {
-                      type: 'linear',
-                      x: 0,
-                      y: 0,
-                      x2: 0,
-                      y2: 1,
-                      colorStops: [{
-                        offset: 0,
-                        color: data.change >= 0 ? 'rgba(0, 166, 81, 0.2)' : 'rgba(255, 77, 77, 0.2)'
-                      }, {
-                        offset: 1,
-                        color: data.change >= 0 ? 'rgba(0, 166, 81, 0.05)' : 'rgba(255, 77, 77, 0.05)'
-                      }]
-                    }
-                  }
-                }]
-              };
-              mainChart.setOption(option);
-            })
-            .catch(error => {
-              console.error('Error fetching stock data:', error);
-            });
-        }
-
-        // Initialize chart
-        initChart();
-        updateChart(currentStock, currentPeriod);
-
-        // Set up auto-refresh
-        setInterval(() => {
-          updateChart(currentStock, currentPeriod);
-        }, 30000); // Refresh every 30 seconds
-
-        // Tab buttons for time periods
-        const tabButtons = document.querySelectorAll('.tab-button');
-        tabButtons.forEach(button => {
-          button.addEventListener('click', function() {
-            tabButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-            currentPeriod = this.dataset.period;
-            updateChart(currentStock, currentPeriod);
-          });
-        });
-
-        // Search functionality
-        const searchInput = document.getElementById('searchInput');
-        let searchTimeout;
-
-        searchInput.addEventListener('input', function(e) {
-          clearTimeout(searchTimeout);
-          const query = e.target.value.trim();
-          
-          if (query.length >= 2) {
-            searchTimeout = setTimeout(() => {
-              fetch(`/api/search?query=${encodeURIComponent(query)}`)
-                .then(response => response.json())
-                .then(data => {
-                  // Update search results
-                  const searchResults = document.createElement('div');
-                  searchResults.className = 'absolute top-full left-0 w-full bg-[#1a1a1a] mt-1 rounded-lg shadow-lg z-50';
-                  
-                  if (data.length === 0) {
-                    searchResults.innerHTML = '<div class="p-4 text-[#a0a0a0]">No results found</div>';
-                  } else {
-                    searchResults.innerHTML = data.map(item => `
-                      <div class="p-4 hover:bg-[#222222] cursor-pointer" data-symbol="${item.symbol}">
-                        <div class="font-bold">${item.symbol}</div>
-                        <div class="text-sm text-[#a0a0a0]">${item.name}</div>
-                        <div class="text-sm ${item.change >= 0 ? 'positive' : 'negative'}">
-                          ${item.price.toFixed(2)} (${item.change >= 0 ? '+' : ''}${item.changePercent.toFixed(2)}%)
-                        </div>
-                      </div>
-                    `).join('');
-                    
-                    // Add click handlers
-                    searchResults.querySelectorAll('div[data-symbol]').forEach(result => {
-                      result.addEventListener('click', () => {
-                        currentStock = result.dataset.symbol;
-                        updateChart(currentStock, currentPeriod);
-                        searchInput.value = '';
-                        searchResults.remove();
-                      });
-                    });
-                  }
-                  
-                  // Remove existing results if any
-                  const existingResults = document.querySelector('.search-results');
-                  if (existingResults) {
-                    existingResults.remove();
-                  }
-                  
-                  searchResults.classList.add('search-results');
-                  searchInput.parentElement.appendChild(searchResults);
-                })
-                .catch(error => {
-                  console.error('Error searching:', error);
-                });
-            }, 300);
-          }
-        });
-
-        // Close search results when clicking outside
-        document.addEventListener('click', function(e) {
-          if (!searchInput.contains(e.target)) {
-            const searchResults = document.querySelector('.search-results');
-            if (searchResults) {
-              searchResults.remove();
-            }
-          }
-        });
-
-        // Handle window resize
-        window.addEventListener('resize', function() {
-          if (mainChart) {
-            mainChart.resize();
-          }
-        });
-
-        // Fetch market trends
-        function updateMarketTrends() {
-          fetch('/api/market-trends')
-            .then(response => response.json())
-            .then(data => {
-              // Group trends by region
-              const trendsByRegion = data.reduce((acc, trend) => {
-                if (!acc[trend.region]) {
-                  acc[trend.region] = [];
-                }
-                acc[trend.region].push(trend);
-                return acc;
-              }, {});
-
-              // Update trending indices
-              const trendingIndicesElement = document.getElementById('trendingIndices');
-              let trendingIndicesHTML = '';
-              
-              Object.entries(trendsByRegion).forEach(([region, trends]) => {
-                trendingIndicesHTML += `
-                  <div class="col-span-6">
-                    <h3 class="text-lg font-bold mb-2">${region}</h3>
-                    <div class="grid grid-cols-6 gap-4">
-                      ${trends.slice(0, 6).map(index => {
-                        const changeClass = index.change >= 0 ? 'positive' : 'negative';
-                        return `
-                          <div class="bg-[#222222] p-3 rounded cursor-pointer" data-symbol="${index.symbol}">
-                            <div class="font-bold">${index.symbol.split(' ')[0]}</div>
-                            <div class="text-sm">${index.name}</div>
-                            <div class="text-lg font-bold">${index.price.toFixed(2)}</div>
-                            <div class="text-sm ${changeClass}">${index.change >= 0 ? '+' : ''}${index.changePercent.toFixed(2)}%</div>
-                          </div>
-                        `;
-                      }).join('')}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="feature-card p-6 rounded-lg">
+                    <div class="w-12 h-12 flex items-center justify-center bg-primary/20 rounded-lg mb-4">
+                        <i class="ri-line-chart-line ri-xl text-primary"></i>
                     </div>
-                  </div>
-                `;
-              });
-              
-              trendingIndicesElement.innerHTML = trendingIndicesHTML;
-              
-              // Add click handlers for trending indices
-              trendingIndicesElement.querySelectorAll('div[data-symbol]').forEach(index => {
-                index.addEventListener('click', () => {
-                  currentStock = index.dataset.symbol;
-                  updateChart(currentStock, currentPeriod);
-                });
-              });
-            })
-            .catch(error => {
-              console.error('Error fetching market trends:', error);
-            });
-        }
+                    <h3 class="text-xl font-semibold mb-2">Real-time Data</h3>
+                    <p class="text-gray-400">Access live market data with millisecond updates for stocks, indices, and cryptocurrencies.</p>
+                </div>
+                
+                <div class="feature-card p-6 rounded-lg">
+                    <div class="w-12 h-12 flex items-center justify-center bg-primary/20 rounded-lg mb-4">
+                        <i class="ri-shield-check-line ri-xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Security</h3>
+                    <p class="text-gray-400">Enterprise-grade security with end-to-end encryption for all your financial data.</p>
+                </div>
+                
+                <div class="feature-card p-6 rounded-lg">
+                    <div class="w-12 h-12 flex items-center justify-center bg-primary/20 rounded-lg mb-4">
+                        <i class="ri-exchange-funds-line ri-xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Flexible</h3>
+                    <p class="text-gray-400">Customize your dashboard and analysis tools to match your trading strategy.</p>
+                </div>
+                
+                <div class="feature-card p-6 rounded-lg">
+                    <div class="w-12 h-12 flex items-center justify-center bg-primary/20 rounded-lg mb-4">
+                        <i class="ri-bar-chart-box-line ri-xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Statistics</h3>
+                    <p class="text-gray-400">Advanced analytics with AI-powered insights to identify market trends.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        // Initial market trends update
-        updateMarketTrends();
+    <!-- Data Visualization Section -->
+    <section class="w-full py-20">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="flex flex-col md:flex-row gap-12 items-center">
+                <div class="w-full md:w-1/2">
+                    <h2 class="text-3xl font-bold mb-6">Advanced market analysis at your fingertips</h2>
+                    <p class="text-gray-300 mb-6">Our platform provides comprehensive tools for technical and fundamental analysis, helping you make data-driven investment decisions.</p>
+                    
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-start">
+                            <div class="w-6 h-6 flex items-center justify-center text-primary mr-3 mt-1">
+                                <i class="ri-check-line ri-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Technical Analysis Tools</h4>
+                                <p class="text-gray-400">Over 100+ technical indicators and drawing tools</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-6 h-6 flex items-center justify-center text-primary mr-3 mt-1">
+                                <i class="ri-check-line ri-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Fundamental Data</h4>
+                                <p class="text-gray-400">Financial statements, earnings reports, and key metrics</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-6 h-6 flex items-center justify-center text-primary mr-3 mt-1">
+                                <i class="ri-check-line ri-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">AI-Powered Insights</h4>
+                                <p class="text-gray-400">Machine learning algorithms to identify patterns and trends</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="bg-gradient-to-r from-primary to-indigo-600 text-white px-6 py-3 !rounded-button whitespace-nowrap">Explore features</button>
+                </div>
+                
+                <div class="w-full md:w-1/2 h-[400px]" id="stockChart"></div>
+            </div>
+        </div>
+    </section>
 
-        // Set up auto-refresh for market trends
-        setInterval(updateMarketTrends, 30000); // Refresh every 30 seconds
-      });
+    <!-- Market Overview Section -->
+    <section class="w-full py-20 bg-slate-900/30">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-4">Stay on top of the market</h2>
+                <p class="text-gray-300 max-w-2xl mx-auto">Track market indices, top movers, and your personalized watchlist in real-time</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Market Indices -->
+                <div class="bg-slate-800/50 rounded-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4">Market Indices</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="font-medium">S&P 500</span>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <span class="font-semibold">5,218.19</span>
+                                <span class="text-green-500 text-sm">+0.98%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="font-medium">NASDAQ</span>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <span class="font-semibold">16,429.45</span>
+                                <span class="text-green-500 text-sm">+1.25%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="font-medium">DOW JONES</span>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <span class="font-semibold">38,764.31</span>
+                                <span class="text-red-500 text-sm">-0.12%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="font-medium">FTSE 100</span>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <span class="font-semibold">8,145.63</span>
+                                <span class="text-green-500 text-sm">+0.45%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Top Gainers -->
+                <div class="bg-slate-800/50 rounded-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4">Top Gainers</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="font-medium">NVDA</span>
+                                <p class="text-xs text-gray-400">NVIDIA Corp</p>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <span class="font-semibold">$942.89</span>
+                                <span class="text-green-500 text-sm">+4.58%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="font-medium">TSLA</span>
+                                <p class="text-xs text-gray-400">Tesla Inc</p>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <span class="font-semibold">$178.21</span>
+                                <span class="text-green-500 text-sm">+3.92%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="font-medium">AMD</span>
+                                <p class="text-xs text-gray-400">Advanced Micro Devices</p>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <span class="font-semibold">$164.78</span>
+                                <span class="text-green-500 text-sm">+3.45%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="font-medium">AAPL</span>
+                                <p class="text-xs text-gray-400">Apple Inc</p>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <span class="font-semibold">$189.98</span>
+                                <span class="text-green-500 text-sm">+2.87%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Your Watchlist -->
+                <div class="bg-slate-800/50 rounded-lg p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-semibold">Your Watchlist</h3>
+                        <button class="text-primary">
+                            <i class="ri-add-line ri-lg"></i>
+                        </button>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="font-medium">MSFT</span>
+                                <p class="text-xs text-gray-400">Microsoft Corp</p>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <span class="font-semibold">$425.52</span>
+                                <span class="text-green-500 text-sm">+1.23%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="font-medium">AMZN</span>
+                                <p class="text-xs text-gray-400">Amazon.com Inc</p>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <span class="font-semibold">$182.30</span>
+                                <span class="text-red-500 text-sm">-0.45%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="font-medium">GOOGL</span>
+                                <p class="text-xs text-gray-400">Alphabet Inc</p>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <span class="font-semibold">$176.89</span>
+                                <span class="text-green-500 text-sm">+0.78%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="font-medium">META</span>
+                                <p class="text-xs text-gray-400">Meta Platforms Inc</p>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <span class="font-semibold">$498.72</span>
+                                <span class="text-green-500 text-sm">+2.14%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="w-full py-20">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <h2 class="text-3xl font-bold text-center mb-16">Testimonials</h2>
+            
+            <div class="testimonial-card p-8 rounded-xl max-w-4xl mx-auto relative">
+                <div class="absolute -top-6 left-1/2 transform -translate-x-1/2">
+                    <div class="w-16 h-16 rounded-full overflow-hidden border-4 border-primary">
+                        <img src="https://public.readdy.ai/ai/img_res/8e3020995f841c8de71dcab5bdbb739b.jpg" alt="Client Portrait" class="w-full h-full object-cover">
+                    </div>
+                </div>
+                
+                <div class="text-center pt-10">
+                    <div class="flex justify-center mb-4">
+                        <i class="ri-double-quotes-l ri-2x text-primary opacity-50"></i>
+                    </div>
+                    <p class="text-gray-300 text-lg mb-6">StockInsight has transformed how I analyze market data. The real-time updates and AI-powered insights have helped me identify opportunities I would have otherwise missed. The platform is intuitive and provides all the tools I need to make informed investment decisions.</p>
+                    <div>
+                        <h4 class="font-semibold">Michael Chen</h4>
+                        <p class="text-gray-400 text-sm">Senior Portfolio Manager, Horizon Capital</p>
+                    </div>
+                </div>
+                
+                <div class="flex justify-center mt-8 space-x-2">
+                    <button class="w-2 h-2 rounded-full bg-gray-600"></button>
+                    <button class="w-2 h-2 rounded-full bg-primary"></button>
+                    <button class="w-2 h-2 rounded-full bg-gray-600"></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Clients Section -->
+    <section class="w-full py-16 bg-slate-900/30">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <h2 class="text-2xl font-bold text-center mb-12">Our Clients</h2>
+            
+            <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16">
+                <div class="w-24 h-16 flex items-center justify-center">
+                    <i class="ri-visa-line ri-3x client-logo"></i>
+                </div>
+                <div class="w-24 h-16 flex items-center justify-center">
+                    <i class="ri-mastercard-line ri-3x client-logo"></i>
+                </div>
+                <div class="w-24 h-16 flex items-center justify-center">
+                    <i class="ri-paypal-line ri-3x client-logo"></i>
+                </div>
+                <div class="w-24 h-16 flex items-center justify-center">
+                    <i class="ri-amazon-line ri-3x client-logo"></i>
+                </div>
+                <div class="w-24 h-16 flex items-center justify-center">
+                    <i class="ri-apple-line ri-3x client-logo"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing CTA Section -->
+    <section class="w-full py-20">
+        <div class="max-w-3xl mx-auto px-6 md:px-12 text-center">
+            <h2 class="text-3xl font-bold mb-4">The <span class="gradient-text">StockInsight</span> plan starts from $19.99</h2>
+            <p class="text-gray-300 mb-8">Find the plan that's right for you</p>
+            <button class="bg-gradient-to-r from-primary to-indigo-600 text-white px-8 py-3 !rounded-button whitespace-nowrap">Show plans</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="w-full py-12 bg-slate-900/50">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+                <div class="flex items-center mb-6 md:mb-0">
+                    <span class="text-2xl font-['Pacifico'] text-white mr-2">logo</span>
+                    <span class="text-sm text-gray-400">Finance Theme</span>
+                </div>
+                
+                <nav class="flex flex-wrap justify-center gap-x-8 gap-y-4">
+                    <a href="#" class="text-gray-300 hover:text-primary transition">Home</a>
+                    <a href="#" class="text-gray-300 hover:text-primary transition">About</a>
+                    <a href="#" class="text-gray-300 hover:text-primary transition">Features</a>
+                    <a href="#" class="text-gray-300 hover:text-primary transition">Pricing</a>
+                    <a href="#" class="text-gray-300 hover:text-primary transition">Contact</a>
+                </nav>
+                
+                <button class="bg-gradient-to-r from-primary to-indigo-600 text-white px-6 py-2 !rounded-button whitespace-nowrap mt-6 md:mt-0">Sign In</button>
+            </div>
+            
+            <div class="border-t border-gray-700 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2025 StockInsight. All rights reserved.</p>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-gray-400 hover:text-primary">
+                            <i class="ri-twitter-x-line ri-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary">
+                            <i class="ri-linkedin-line ri-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary">
+                            <i class="ri-facebook-line ri-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary">
+                            <i class="ri-instagram-line ri-lg"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize the stock chart
+        const chartDom = document.getElementById('stockChart');
+        const myChart = echarts.init(chartDom);
+        
+        const option = {
+            animation: false,
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                textStyle: {
+                    color: '#1f2937'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '3%',
+                bottom: '3%',
+                top: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                axisLine: {
+                    lineStyle: {
+                        color: '#475569'
+                    }
+                },
+                axisLabel: {
+                    color: '#94a3b8'
+                }
+            },
+            yAxis: {
+                type: 'value',
+                axisLine: {
+                    lineStyle: {
+                        color: '#475569'
+                    }
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: '#334155',
+                        type: 'dashed'
+                    }
+                },
+                axisLabel: {
+                    color: '#94a3b8'
+                }
+            },
+            series: [
+                {
+                    name: 'AAPL',
+                    type: 'line',
+                    smooth: true,
+                    lineStyle: {
+                        width: 3,
+                        color: 'rgba(87, 181, 231, 1)'
+                    },
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            {
+                                offset: 0,
+                                color: 'rgba(87, 181, 231, 0.3)'
+                            },
+                            {
+                                offset: 1,
+                                color: 'rgba(87, 181, 231, 0.1)'
+                            }
+                        ])
+                    },
+                    data: [168, 170, 175, 169, 173, 179, 182, 189, 185, 183, 187, 190]
+                },
+                {
+                    name: 'MSFT',
+                    type: 'line',
+                    smooth: true,
+                    lineStyle: {
+                        width: 3,
+                        color: 'rgba(141, 211, 199, 1)'
+                    },
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            {
+                                offset: 0,
+                                color: 'rgba(141, 211, 199, 0.3)'
+                            },
+                            {
+                                offset: 1,
+                                color: 'rgba(141, 211, 199, 0.1)'
+                            }
+                        ])
+                    },
+                    data: [390, 395, 405, 410, 408, 415, 425, 430, 420, 418, 422, 425]
+                }
+            ]
+        };
+        
+        myChart.setOption(option);
+        
+        // Responsive chart
+        window.addEventListener('resize', function() {
+            myChart.resize();
+        });
     </script>
-  </body>
-</html> 
+</body>
+</html>
