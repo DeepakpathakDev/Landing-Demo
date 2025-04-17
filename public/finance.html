@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Data</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --dark-bg: #0a0b1e;
+            --card-bg: #151931;
+            --text-primary: #ffffff;
+            --text-secondary: #8b8ca7;
+            --accent-blue: #2962ff;
+            --border-color: #2a2c42;
+            --success-color: #00c853;
+            --danger-color: #ff3d71;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .home-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            padding: 0.5rem;
+            border-radius: 50%;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .home-icon:hover {
+            background-color: var(--accent-blue);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .market-header {
+            margin-bottom: 2rem;
+            padding-right: 50px; /* Add space for the home icon */
+        }
+
+        .market-header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .market-header p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .market-nav {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .market-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .market-nav a.active {
+            color: var(--text-primary);
+            background-color: var(--card-bg);
+        }
+
+        .market-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .market-card h2 {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .indices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .index-item {
+            padding: 1rem;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .index-name {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .index-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .index-change {
+            font-size: 0.9rem;
+        }
+
+        .positive-change {
+            color: var(--success-color);
+        }
+
+        .negative-change {
+            color: var(--danger-color);
+        }
+
+        .stock-list {
+            width: 100%;
+        }
+
+        .stock-list th {
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .stock-list td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .stock-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .stock-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--card-bg);
+        }
+
+        .stock-name {
+            font-weight: 500;
+        }
+
+        .stock-symbol {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .chart-container {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            height: 400px;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-input {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            flex: 1;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .btn-primary {
+            background-color: var(--accent-blue);
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 6px;
+        }
+
+        .btn-primary:hover {
+            background-color: #1a4fc7;
+        }
+
+        .filter-section {
+            background-color: var(--card-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .search-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 100px;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        select.search-input {
+            background-color: var(--card-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem;
+            border-radius: 6px;
+        }
+
+        .pagination-container {
+            margin-top: 1rem;
+        }
+
+        .pagination-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .pagination-info {
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            background-color: var(--card-bg);
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-outline-primary {
+            color: var(--accent-blue);
+            border-color: var(--accent-blue);
+            background-color: transparent;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--accent-blue);
+            color: white;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+
+        .transaction-bought {
+            color: var(--success-color);
+        }
+
+        .transaction-sold {
+            color: var(--danger-color);
+        }
+
+        .transaction-pledge {
+            color: #ffc107;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .market-nav a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .market-nav a.active {
+            color: var(--text-primary);
+            background-color: var(--card-bg);
+        }
+
+        .search-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .toggle-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+            background-color: var(--card-bg);
+            padding: 0.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .toggle-button {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            background: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-button.active {
+            background-color: var(--accent-blue);
+            color: white;
+        }
+
+        .news-item {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .news-item:last-child {
+            border-bottom: none;
+        }
+
+        .news-date {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .news-description {
+            margin-bottom: 0.5rem;
+        }
+
+        .news-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .news-tag {
+            background-color: var(--dark-bg);
+            color: var(--text-secondary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .badge {
+            padding: 0.35em 0.65em;
+            font-size: 0.75em;
+            font-weight: 700;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.25rem;
+        }
+        .bg-secondary {
+            background-color: var(--text-secondary) !important;
+            color: var(--dark-bg);
+        }
+        .bg-primary {
+            background-color: var(--accent-blue) !important;
+            color: white;
+        }
+        .stock-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .stock-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--card-bg);
+        }
+        .stock-name {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+        .stock-symbol {
+            font-size: 0.875em;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <a href="/" class="home-icon" title="Go to Home">
+            <i class="bi bi-house-door"></i>
+        </a>
+        <div class="market-header">
+            <h1>Market Data</h1>
+            <p>Real-time market insights and analytics for informed investment decisions</p>
+        </div>
+
+        <nav class="market-nav">
+            <a href="#market" class="active" onclick="switchTab('market')">Market Overview</a>
+            <a href="#news" onclick="switchTab('news')">News & Announcements</a>
+            <a href="#insider" onclick="switchTab('insider')">Insider Trading</a>
+            <a href="#intraday" onclick="switchTab('intraday')">Intraday Data</a>
+        </nav>
+
+        <div id="market" class="tab-content active">
+            <div class="market-card">
+                <h2>Market Indices</h2>
+                <div class="indices-grid" id="marketIndices">
+                    <!-- Market indices will be populated here -->
+            </div>
+        </div>
+
+            <div class="market-card">
+                <h2>Price Movers</h2>
+                <div class="toggle-container">
+                    <button class="toggle-button active" onclick="togglePriceMovers('gainers-content', this)">Top Gainers</button>
+                    <button class="toggle-button" onclick="togglePriceMovers('losers-content', this)">Top Losers</button>
+        </div>
+
+                <div id="gainers-content" class="content-section active">
+                    <div class="table-responsive">
+                        <table class="stock-list" id="topGainers">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Price</th>
+                                    <th>Change</th>
+                                    <th>% Change</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Top gainers will be populated here -->
+                            </tbody>
+                        </table>
+            </div>
+        </div>
+
+                <div id="losers-content" class="content-section">
+                    <div class="table-responsive">
+                        <table class="stock-list" id="topLosers">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Price</th>
+                                    <th>Change</th>
+                                    <th>% Change</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Top losers will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+            </div>
+            </div>
+        </div>
+
+        <div id="news" class="tab-content">
+            <div class="market-card">
+                <h2>News & Announcements</h2>
+                <div class="toggle-container">
+                    <button class="toggle-button active" onclick="toggleContent('news-content', this)">News</button>
+                    <button class="toggle-button" onclick="toggleContent('announcements-content', this)">Announcements</button>
+                    <button class="toggle-button" onclick="toggleContent('results-content', this)">Results</button>
+        </div>
+
+                <div id="news-content" class="content-section active">
+                    <div id="newsItems">
+                        <div class="text-center p-4">Loading news...</div>
+                    </div>
+                    <div class="pagination-container">
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div class="pagination-controls">
+                                <button class="btn btn-outline-primary" id="newsPrevPage" onclick="changeNewsPage(-1)" disabled>
+                                    <i class="bi bi-chevron-left"></i> Previous
+                                </button>
+                                <span class="pagination-info" id="newsPageInfo">Page 1</span>
+                                <button class="btn btn-outline-primary" id="newsNextPage" onclick="changeNewsPage(1)" disabled>
+                                    Next <i class="bi bi-chevron-right"></i>
+                                </button>
+                    </div>
+                            <div class="text-secondary" id="newsTotalRecords">Total Records: 0</div>
+                    </div>
+                </div>
+            </div>
+            
+                <div id="announcements-content" class="content-section">
+                    <div id="announcementItems">
+                        <div class="text-center p-4">Loading announcements...</div>
+                    </div>
+                    <div class="pagination-container">
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div class="pagination-controls">
+                                <button class="btn btn-outline-primary" id="annPrevPage" onclick="changeAnnouncementPage(-1)" disabled>
+                                    <i class="bi bi-chevron-left"></i> Previous
+                                </button>
+                                <span class="pagination-info" id="annPageInfo">Page 1</span>
+                                <button class="btn btn-outline-primary" id="annNextPage" onclick="changeAnnouncementPage(1)" disabled>
+                                    Next <i class="bi bi-chevron-right"></i>
+                                </button>
+                </div>
+                            <div class="text-secondary" id="annTotalRecords">Total Records: 0</div>
+                        </div>
+                </div>
+            </div>
+
+                <div id="results-content" class="content-section">
+                    <div id="resultsItems">
+                        <div class="text-center p-4">Loading results...</div>
+                    </div>
+                    <div class="pagination-container">
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div class="pagination-controls">
+                                <button class="btn btn-outline-primary" id="resultsPrevPage" onclick="changeResultsPage(-1)" disabled>
+                                    <i class="bi bi-chevron-left"></i> Previous
+                                </button>
+                                <span class="pagination-info" id="resultsPageInfo">Page 1</span>
+                                <button class="btn btn-outline-primary" id="resultsNextPage" onclick="changeResultsPage(1)" disabled>
+                                    Next <i class="bi bi-chevron-right"></i>
+                                </button>
+                            </div>
+                            <div class="text-secondary" id="resultsTotalRecords">Total Records: 0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="insider" class="tab-content">
+            <div class="market-card">
+                <h2>Insider Trading Activity</h2>
+                <div class="filter-section mb-3">
+                    <div class="search-container">
+                        <input type="text" class="search-input" id="insiderSearch" placeholder="Search by company or person...">
+                        <select class="search-input" id="insiderCategory">
+                            <option value="">All Categories</option>
+                            <option value="Promoter">Promoter</option>
+                            <option value="Director">Director</option>
+                            <option value="KMP">Key Managerial Personnel</option>
+                        </select>
+                        <select class="search-input" id="exchangeType">
+                            <option value="BSE">BSE</option>
+                            <option value="NSE">NSE</option>
+                        </select>
+                        <select class="search-input" id="insiderTransactionType">
+                            <option value="">All Transactions</option>
+                            <option value="Bought">Bought</option>
+                            <option value="Sold">Sold</option>
+                            <option value="Pledge">Pledge</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="loadInsiderTradingData()">
+                            <span id="insiderLoadingSpinner" class="spinner-border spinner-border-sm d-none"></span>
+                            Search
+                        </button>
+                                    </div>
+                </div>
+                        <div class="table-responsive">
+                    <table class="stock-list">
+                                <thead>
+                                    <tr>
+                                <th>Person/Company</th>
+                                        <th>Category</th>
+                                        <th>Transaction</th>
+                                <th>Stock</th>
+                                        <th>Quantity</th>
+                                <th>Value</th>
+                                <th>Date</th>
+                                    </tr>
+                                </thead>
+                        <tbody id="insiderDealsTableBody">
+                                    <tr>
+                                <td colspan="7" class="text-center">Loading data...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                                        </div>
+                <div class="pagination-container">
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div class="pagination-controls">
+                            <button class="btn btn-outline-primary" id="prevPage" onclick="changePage(-1)" disabled>
+                                <i class="bi bi-chevron-left"></i> Previous
+                            </button>
+                            <span class="pagination-info" id="pageInfo">Page 1</span>
+                            <button class="btn btn-outline-primary" id="nextPage" onclick="changePage(1)" disabled>
+                                Next <i class="bi bi-chevron-right"></i>
+                            </button>
+                                    </div>
+                        <div class="text-secondary" id="totalRecords">Total Records: 0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="intraday" class="tab-content">
+            <div class="market-card">
+                <h2>Intraday Price Movement</h2>
+                <div class="search-container">
+                    <input type="text" id="listingIdInput" class="search-input" placeholder="Enter Listing ID">
+                    <input type="date" id="intradayDateInput" class="search-input">
+                    <button class="btn btn-primary" onclick="loadIntradayPrices()">
+                        <span id="intradayLoadingSpinner" class="spinner-border spinner-border-sm d-none"></span>
+                        Load Data
+                    </button>
+                </div>
+                <div id="intradayChartContainer" class="chart-container">
+                    <canvas id="intradayChart"></canvas>
+                                </div>
+                                    </div>
+                                    </div>
+                                </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Set default date to today
+        document.getElementById('intradayDateInput').value = new Date().toISOString().split('T')[0];
+
+        // Function to load market indices and price movers
+        async function loadMarketIndices() {
+            try {
+                // Load market indices
+                const indicesResponse = await fetch('/api/stockedge/indices');
+                const indicesData = await indicesResponse.json();
+                
+                const indicesContainer = document.getElementById('marketIndices');
+                indicesContainer.innerHTML = '';
+
+                if (indicesData && indicesData.length > 0) {
+                    indicesData.slice(0, 4).forEach(index => {
+                        const change = parseFloat(index.Change || 0);
+                        const percentChange = parseFloat(index.ChangePercentage || 0);
+                        const changeClass = change >= 0 ? 'positive-change' : 'negative-change';
+                        const changeIcon = change >= 0 ? '↑' : '↓';
+
+                        const indexElement = document.createElement('div');
+                        indexElement.className = 'index-item';
+                        indexElement.innerHTML = `
+                            <div class="index-name">${index.SecurityName || '-'}</div>
+                            <div class="index-value">${index.Close || '-'}</div>
+                            <div class="index-change ${changeClass}">
+                                ${changeIcon} ${Math.abs(change).toFixed(2)} (${Math.abs(percentChange).toFixed(2)}%)
+                            </div>
+                        `;
+                        indicesContainer.appendChild(indexElement);
+                    });
+                }
+
+                // Load top gainers
+                const gainersResponse = await fetch('https://api.stockedge.com/Api/trendingstocksapi/GetPriceMovers?gainerLosersTypeEnum=1&page=1&pageSize=10&lang=en');
+                const gainersData = await gainersResponse.json();
+                
+                const gainersTable = document.getElementById('topGainers').getElementsByTagName('tbody')[0];
+                gainersTable.innerHTML = '';
+
+                if (gainersData && gainersData.length > 0) {
+                    gainersData.forEach(stock => {
+                        const change = parseFloat(stock.CZ || 0);
+                        const percentChange = parseFloat(stock.CZG || 0);
+                        const changeClass = 'positive-change';
+                        const changeIcon = '↑';
+
+                        const row = gainersTable.insertRow();
+                        row.innerHTML = `
+                            <td>
+                                <div class="stock-info">
+                                    <img src="${stock.SecurityLogoUrl || `https://logo.clearbit.com/${stock.Symbol.toLowerCase().replace(/\s+/g, '')}.com`}" 
+                                         alt="${stock.Name}"
+                                         class="stock-logo"
+                                         onerror="this.src='https://via.placeholder.com/32'">
+                                    <div>
+                                        <div class="stock-name">${stock.Name || '-'}</div>
+                                        <div class="stock-symbol">${stock.Symbol || '-'}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>₹${stock.C || '-'}</td>
+                            <td class="${changeClass}">${changeIcon} ${Math.abs(change).toFixed(2)}</td>
+                            <td class="${changeClass}">${Math.abs(percentChange).toFixed(2)}%</td>
+                        `;
+                    });
+                }
+
+                // Load top losers
+                const losersResponse = await fetch('https://api.stockedge.com/Api/trendingstocksapi/GetPriceMovers?gainerLosersTypeEnum=2&page=1&pageSize=10&lang=en');
+                const losersData = await losersResponse.json();
+                
+                const losersTable = document.getElementById('topLosers').getElementsByTagName('tbody')[0];
+                losersTable.innerHTML = '';
+
+                if (losersData && losersData.length > 0) {
+                    losersData.forEach(stock => {
+                        const change = parseFloat(stock.CZ || 0);
+                        const percentChange = parseFloat(stock.CZG || 0);
+                        const changeClass = 'negative-change';
+                        const changeIcon = '↓';
+
+                        const row = losersTable.insertRow();
+                        row.innerHTML = `
+                            <td>
+                                <div class="stock-info">
+                                    <img src="${stock.SecurityLogoUrl || `https://logo.clearbit.com/${stock.Symbol.toLowerCase().replace(/\s+/g, '')}.com`}" 
+                                         alt="${stock.Name}"
+                                         class="stock-logo"
+                                         onerror="this.src='https://via.placeholder.com/32'">
+                                    <div>
+                                        <div class="stock-name">${stock.Name || '-'}</div>
+                                        <div class="stock-symbol">${stock.Symbol || '-'}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>₹${stock.C || '-'}</td>
+                            <td class="${changeClass}">${changeIcon} ${Math.abs(change).toFixed(2)}</td>
+                            <td class="${changeClass}">${Math.abs(percentChange).toFixed(2)}%</td>
+                        `;
+                    });
+                }
+
+            } catch (error) {
+                console.error('Error loading market data:', error);
+            }
+        }
+
+        // Function to load top movers
+        async function loadTopMovers() {
+            try {
+                const response = await fetch('/api/stockedge/price-movers');
+                const data = await response.json();
+                
+                const moversTable = document.getElementById('topMovers').getElementsByTagName('tbody')[0];
+                moversTable.innerHTML = '';
+
+                if (data && data.length > 0) {
+                    data.slice(0, 5).forEach(stock => {
+                        const change = parseFloat(stock.CZ || 0);
+                        const percentChange = parseFloat(stock.CZG || 0);
+                        const changeClass = change >= 0 ? 'positive-change' : 'negative-change';
+                        const changeIcon = change >= 0 ? '↑' : '↓';
+
+                        const row = moversTable.insertRow();
+                        row.innerHTML = `
+                            <td>
+                                <div class="stock-info">
+                                    <img src="https://logo.clearbit.com/${stock.Name.toLowerCase().replace(/\s+/g, '')}.com" 
+                                         alt="${stock.Name}"
+                                         class="stock-logo"
+                                         onerror="this.src='https://via.placeholder.com/32'">
+                                    <div>
+                                        <div class="stock-name">${stock.Name || '-'}</div>
+                                        <div class="stock-symbol">${stock.SectorName || '-'}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>₹${stock.C || '-'}</td>
+                            <td class="${changeClass}">${changeIcon} ${Math.abs(change).toFixed(2)}</td>
+                            <td class="${changeClass}">${Math.abs(percentChange).toFixed(2)}%</td>
+                            <td>${(stock.Volume || 0).toLocaleString()}</td>
+                        `;
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading top movers:', error);
+            }
+        }
+
+        // Function to load intraday prices (keeping the existing implementation)
+        async function loadIntradayPrices() {
+            try {
+                const listingId = document.getElementById('listingIdInput').value;
+                const date = document.getElementById('intradayDateInput').value;
+                const loadingSpinner = document.getElementById('intradayLoadingSpinner');
+
+                if (!listingId) {
+                    alert('Please enter a Listing ID');
+                    return;
+                }
+
+                loadingSpinner.classList.remove('d-none');
+                const chartContainer = document.getElementById('intradayChartContainer');
+                chartContainer.innerHTML = '<canvas id="intradayChart"></canvas>';
+
+                const response = await fetch(`/api/stockedge/intraday-prices/${listingId}?date=${date}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch intraday prices');
+                }
+
+                const data = await response.json();
+                if (!data || !Array.isArray(data) || data.length === 0) {
+                    chartContainer.innerHTML = '<div class="text-center p-4">No data available for the selected date</div>';
+                    return;
+                }
+
+                data.sort((a, b) => new Date(a.Date) - new Date(b.Date));
+
+                const labels = data.map(item => {
+                    const time = new Date(item.Date);
+                    return time.toLocaleTimeString('en-IN', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true
+                    });
+                });
+
+                const closePrices = data.map(item => parseFloat(item.Close) || 0);
+                const highPrices = data.map(item => parseFloat(item.High) || 0);
+                const lowPrices = data.map(item => parseFloat(item.Low) || 0);
+
+                const canvas = document.getElementById('intradayChart');
+                if (!canvas) return;
+
+                if (window.intradayChart && typeof window.intradayChart.destroy === 'function') {
+                    window.intradayChart.destroy();
+                }
+
+                const ctx = canvas.getContext('2d');
+                window.intradayChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Close Price',
+                                data: closePrices,
+                                borderColor: '#2962ff',
+                                backgroundColor: 'rgba(41, 98, 255, 0.1)',
+                                fill: true,
+                                tension: 0.4
+                            },
+                            {
+                                label: 'High',
+                                data: highPrices,
+                                borderColor: '#00c853',
+                                borderDash: [5, 5],
+                                fill: false
+                            },
+                            {
+                                label: 'Low',
+                                data: lowPrices,
+                                borderColor: '#ff3d71',
+                                borderDash: [5, 5],
+                                fill: false
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: '#ffffff'
+                                }
+                            },
+                            title: {
+                                display: false
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                                backgroundColor: '#151931',
+                                borderColor: '#2a2c42',
+                                borderWidth: 1,
+                                titleColor: '#ffffff',
+                                bodyColor: '#8b8ca7',
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.dataset.label}: ₹${context.parsed.y.toFixed(2)}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    color: '#2a2c42'
+                                },
+                                ticks: {
+                                    color: '#8b8ca7'
+                                }
+                            },
+                            y: {
+                                grid: {
+                                    color: '#2a2c42'
+                                },
+                                ticks: {
+                                    color: '#8b8ca7',
+                                    callback: function(value) {
+                                        return '₹' + value.toFixed(2);
+                                    }
+                                }
+                            }
+                        },
+                        interaction: {
+                            mode: 'nearest',
+                            axis: 'x',
+                            intersect: false
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading intraday prices:', error);
+                const chartContainer = document.getElementById('intradayChartContainer');
+                chartContainer.innerHTML = `<div class="text-center p-4 text-danger">Error loading data: ${error.message}</div>`;
+            } finally {
+                document.getElementById('intradayLoadingSpinner').classList.add('d-none');
+            }
+        }
+
+        // Update pagination variables
+        let currentPage = 1;
+        let totalPages = 1;
+        let totalRecords = 0;
+        const pageSize = 19;
+
+        // Add these variables for news and announcements pagination
+        let currentNewsPage = 1;
+        let currentAnnouncementPage = 1;
+        let currentResultsPage = 1;
+        const newsPageSize = 19;
+        const announcementPageSize = 19;
+        const resultsPageSize = 19;
+
+        // Update the navigation links
+        document.querySelector('.market-nav').innerHTML = `
+            <a href="#market" class="active" onclick="switchTab('market')">Market Overview</a>
+            <a href="#news" onclick="switchTab('news')">News & Announcements</a>
+            <a href="#insider" onclick="switchTab('insider')">Insider Trading</a>
+            <a href="#intraday" onclick="switchTab('intraday')">Intraday Data</a>
+        `;
+
+        // Function to load insider trading data
+        async function loadInsiderTradingData() {
+            try {
+                const searchTerm = document.getElementById('insiderSearch').value;
+                const category = document.getElementById('insiderCategory').value;
+                const transactionType = document.getElementById('insiderTransactionType').value;
+                const exchange = document.getElementById('exchangeType').value;
+                const loadingSpinner = document.getElementById('insiderLoadingSpinner');
+
+                // Show loading state
+                loadingSpinner.classList.remove('d-none');
+                const tableBody = document.getElementById('insiderDealsTableBody');
+                tableBody.innerHTML = '<tr><td colspan="7" class="text-center">Loading data...</td></tr>';
+
+                console.log('Fetching insider trading data with params:', {
+                    page: currentPage,
+                    pageSize: 19,
+                    exchange,
+                    category,
+                    transactionType
+                });
+
+                // Construct API URL with filters and pagination
+                let url = `/api/stockedge/insider-deals?page=${currentPage}&pageSize=19&exchange=${exchange}`;
+                if (category) url += `&category=${category}`;
+                if (transactionType) url += `&transactionType=${transactionType}`;
+
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log('Received insider trading data:', data);
+
+                // Update pagination info
+                totalRecords = data.totalRecords || 0;
+                totalPages = Math.ceil(totalRecords / pageSize);
+                updatePaginationControls();
+
+                // Filter data based on search term
+                let filteredData = data.deals || [];
+                if (searchTerm) {
+                    const searchLower = searchTerm.toLowerCase();
+                    filteredData = filteredData.filter(deal => 
+                        (deal.name && deal.name.toLowerCase().includes(searchLower)) ||
+                        (deal.stockName && deal.stockName.toLowerCase().includes(searchLower))
+                    );
+                }
+
+                if (filteredData.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="7" class="text-center">No data found</td></tr>';
+                    return;
+                }
+
+                tableBody.innerHTML = filteredData.map(deal => `
+                    <tr>
+                        <td>
+                            <div class="stock-info">
+                                <div class="stock-name">${deal.name || '-'}</div>
+                                <div class="stock-symbol">${deal.category || '-'}</div>
+                            </div>
+                        </td>
+                        <td>${deal.category || '-'}</td>
+                        <td class="transaction-${(deal.transactionType || '').toLowerCase()}">${deal.transactionType || '-'}</td>
+                        <td>
+                            <div class="stock-info">
+                                <img src="${deal.securityLogoUrl || ''}" 
+                                     alt="${deal.stockName || '-'}" 
+                                     class="stock-logo"
+                                     onerror="this.src='https://via.placeholder.com/32'">
+                                <div class="stock-name">${deal.stockName || '-'}</div>
+                            </div>
+                        </td>
+                        <td>${formatNumber(deal.quantity) || '-'}</td>
+                        <td>₹${formatNumber(deal.value) || '-'}</td>
+                        <td>${formatDate(deal.dealDate) || '-'}</td>
+                    </tr>
+                `).join('');
+
+            } catch (error) {
+                console.error('Error loading insider trading data:', error);
+                document.getElementById('insiderDealsTableBody').innerHTML = 
+                    `<tr><td colspan="7" class="text-center text-danger">
+                        Error loading data: ${error.message}. Please try again.
+                    </td></tr>`;
+            } finally {
+                document.getElementById('insiderLoadingSpinner').classList.add('d-none');
+            }
+        }
+
+        // Function to update pagination controls
+        function updatePaginationControls() {
+            document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages}`;
+            document.getElementById('prevPage').disabled = currentPage === 1;
+            document.getElementById('nextPage').disabled = currentPage === totalPages;
+            document.getElementById('totalRecords').textContent = `Total Records: ${totalRecords}`;
+        }
+
+        // Function to change page
+        function changePage(delta) {
+            const newPage = currentPage + delta;
+            if (newPage >= 1 && newPage <= totalPages) {
+                currentPage = newPage;
+                loadInsiderTradingData();
+            }
+        }
+
+        // Function to load news items
+        async function loadNewsItems() {
+            try {
+                console.log('Loading news items for page:', currentNewsPage);
+                const newsContainer = document.getElementById('newsItems');
+                newsContainer.innerHTML = '<div class="text-center p-4">Loading news...</div>';
+
+                const response = await fetch(`/api/stockedge/news?page=${currentNewsPage}&pageSize=19`);
+                const data = await response.json();
+                console.log('Received news data:', data);
+
+                if (!data.data || data.data.length === 0) {
+                    newsContainer.innerHTML = '<div class="text-center p-4">No news items available</div>';
+                    return;
+                }
+
+                newsContainer.innerHTML = data.data.map(item => `
+                    <div class="news-item">
+                        <div class="news-date">${formatDate(item.date)}</div>
+                        <div class="news-description">${item.description}</div>
+                        <div class="news-tags">
+                            ${item.securities?.map(sec => `
+                                <span class="news-tag">${sec.SecurityName}</span>
+                            `).join('') || ''}
+                            ${item.sectors?.map(sec => `
+                                <span class="news-tag">${sec.SectorName}</span>
+                            `).join('') || ''}
+                        </div>
+                    </div>
+                `).join('');
+
+                // Update pagination
+                const totalPages = Math.ceil(data.total / 19);
+                console.log('Total pages:', totalPages);
+                
+                document.getElementById('newsTotalRecords').textContent = `Total Records: ${data.total}`;
+                document.getElementById('newsPageInfo').textContent = `Page ${currentNewsPage} of ${totalPages}`;
+                
+                // Update button states
+                const prevButton = document.getElementById('newsPrevPage');
+                const nextButton = document.getElementById('newsNextPage');
+                
+                console.log('Button states before update:');
+                console.log('Previous button:', prevButton);
+                console.log('Next button:', nextButton);
+                
+                if (prevButton && nextButton) {
+                    prevButton.disabled = currentNewsPage === 1;
+                    nextButton.disabled = currentNewsPage >= totalPages;
+                    
+                    // Remove existing event listeners
+                    prevButton.removeEventListener('click', handlePrevClick);
+                    nextButton.removeEventListener('click', handleNextClick);
+                    
+                    // Add new event listeners
+                    prevButton.addEventListener('click', handlePrevClick);
+                    nextButton.addEventListener('click', handleNextClick);
+                }
+
+            } catch (error) {
+                console.error('Error loading news items:', error);
+                document.getElementById('newsItems').innerHTML = 
+                    `<div class="text-center p-4 text-danger">Error loading news: ${error.message}</div>`;
+            }
+        }
+
+        // Separate click handler functions
+        function handlePrevClick() {
+            console.log('Previous button clicked');
+            changeNewsPage(-1);
+        }
+
+        function handleNextClick() {
+            console.log('Next button clicked');
+            changeNewsPage(1);
+        }
+
+        // Function to change news page
+        function changeNewsPage(delta) {
+            console.log('changeNewsPage called with delta:', delta);
+            console.log('Current page before change:', currentNewsPage);
+            
+            const newPage = currentNewsPage + delta;
+            console.log('New page calculated:', newPage);
+            
+            if (newPage >= 1) {
+                currentNewsPage = newPage;
+                console.log('Page changed to:', currentNewsPage);
+                loadNewsItems();
+            }
+        }
+
+        // Function to change announcement page
+        function changeAnnouncementPage(delta) {
+            currentAnnouncementPage += delta;
+            loadCorporateAnnouncements();
+        }
+
+        // Function to toggle between news, announcements, and results
+        function toggleContent(contentId, button) {
+            console.log('Toggle content:', contentId);
+            
+            // Update button states
+            document.querySelectorAll('.toggle-button').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            // Update content visibility
+            document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
+            document.getElementById(contentId).classList.add('active');
+
+            // Load appropriate content
+            if (contentId === 'news-content') {
+                loadNewsItems();
+            } else if (contentId === 'announcements-content') {
+                loadCorporateAnnouncements();
+            } else if (contentId === 'results-content') {
+                loadCorporateResults();
+            }
+        }
+
+        // Function to load corporate announcements
+        async function loadCorporateAnnouncements() {
+            try {
+                const announcementsContainer = document.getElementById('announcementItems');
+                announcementsContainer.innerHTML = '<div class="text-center p-4">Loading announcements...</div>';
+
+                console.log(`Fetching corporate announcements for page ${currentAnnouncementPage}`);
+                const response = await fetch(`/api/stockedge/corporate-announcements?page=${currentAnnouncementPage}&pageSize=19`);
+                const data = await response.json();
+                
+                if (!data.data || data.data.length === 0) {
+                    announcementsContainer.innerHTML = '<div class="text-center p-4">No announcements available</div>';
+                    return;
+                }
+
+                // Create table for announcements
+                announcementsContainer.innerHTML = `
+                    <div class="table-responsive">
+                        <table class="stock-list">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Company</th>
+                                    <th>Subject</th>
+                                    <th>Type</th>
+                                    <th>Meeting Details</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.data.map(announcement => {
+                                    const meetingInfo = announcement.typeOfMeeting ? 
+                                        `${announcement.typeOfMeeting}${announcement.dateOfMeeting ? 
+                                            ` on ${formatDate(announcement.dateOfMeeting)}` : ''}` : 
+                                        'N/A';
+                                    
+                                    return `
+                                        <tr>
+                                            <td>${formatDate(announcement.date)}</td>
+                            <td>
+                                <div class="stock-info">
+                                                    <img src="https://logo.clearbit.com/${announcement.securitySlug.replace(/-/g, '')}.com" 
+                                                         alt="${announcement.companyName}"
+                                                         class="stock-logo"
+                                                         onerror="this.src='https://via.placeholder.com/32'">
+                                                    <div>
+                                                        <div class="stock-name">${announcement.companyName}</div>
+                                                        <div class="stock-symbol text-muted">${announcement.securitySlug}</div>
+                                                    </div>
+                                </div>
+                            </td>
+                                            <td>
+                                                <div style="max-width: 300px; overflow: hidden; text-overflow: ellipsis;">
+                                                    ${announcement.subject}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="badge ${announcement.type.toLowerCase().includes('general') ? 
+                                                    'bg-secondary' : 'bg-primary'}">${announcement.type}</span>
+                                            </td>
+                                            <td>${meetingInfo}</td>
+                                            <td>
+                                                ${announcement.fileUrl ? 
+                                                    `<a href="${announcement.fileUrl}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                                        <i class="bi bi-file-earmark-text"></i> View
+                                                    </a>` : 
+                                                    '<span class="text-muted">No file</span>'
+                                                }
+                                            </td>
+                                        </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+
+                // Update pagination
+                document.getElementById('annTotalRecords').textContent = `Total Records: ${data.total}`;
+                document.getElementById('annPageInfo').textContent = `Page ${data.page} of ${data.totalPages}`;
+                document.getElementById('annPrevPage').disabled = !data.hasPrevPage;
+                document.getElementById('annNextPage').disabled = !data.hasNextPage;
+
+            } catch (error) {
+                console.error('Error loading announcements:', error);
+                document.getElementById('announcementItems').innerHTML = 
+                    `<div class="text-center p-4 text-danger">Error loading announcements: ${error.message}</div>`;
+            }
+        }
+
+        // Function to load corporate results
+        async function loadCorporateResults() {
+            try {
+                const resultsContainer = document.getElementById('resultsItems');
+                resultsContainer.innerHTML = '<div class="text-center p-4">Loading results...</div>';
+
+                console.log(`Fetching corporate results for page ${currentResultsPage}`);
+                const response = await fetch(`/api/stockedge/corporate-results?page=${currentResultsPage}&pageSize=19`);
+                const data = await response.json();
+                
+                if (!data.data || data.data.length === 0) {
+                    resultsContainer.innerHTML = '<div class="text-center p-4">No results available</div>';
+                    return;
+                }
+
+                // Create table for results
+                resultsContainer.innerHTML = `
+                    <div class="table-responsive">
+                        <table class="stock-list">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Company</th>
+                                    <th>LTP</th>
+                                    <th>Change %</th>
+                                    <th>Market Cap</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.data.map(item => {
+                                    const changeClass = item.changePercent >= 0 ? 'positive-change' : 'negative-change';
+                                    const changeIcon = item.changePercent >= 0 ? '↑' : '↓';
+                                    return `
+                                        <tr>
+                                            <td>${formatDate(item.date)}</td>
+                                            <td>
+                                                <div class="stock-info">
+                                                    <img src="https://logo.clearbit.com/${item.securityName.toLowerCase().replace(/\s+/g, '')}.com" 
+                                                         alt="${item.securityName}"
+                                                         class="stock-logo"
+                                                         onerror="this.src='https://via.placeholder.com/32'">
+                                                    <div class="stock-name">${item.securityName}</div>
+                                                </div>
+                                            </td>
+                                            <td>₹${formatNumber(item.ltp)}</td>
+                                            <td class="${changeClass}">
+                                                ${changeIcon} ${Math.abs(item.changePercent).toFixed(2)}%
+                                            </td>
+                                            <td>₹${formatNumber(Math.round(item.mcap / 10000000))} Cr</td>
+                                        </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+
+                // Update pagination
+                document.getElementById('resultsTotalRecords').textContent = `Total Records: ${data.total}`;
+                document.getElementById('resultsPageInfo').textContent = `Page ${data.page}`;
+                document.getElementById('resultsPrevPage').disabled = currentResultsPage === 1;
+                document.getElementById('resultsNextPage').disabled = currentResultsPage * 19 >= data.total;
+
+            } catch (error) {
+                console.error('Error loading corporate results:', error);
+                document.getElementById('resultsItems').innerHTML = 
+                    `<div class="text-center p-4 text-danger">Error loading results: ${error.message}</div>`;
+            }
+        }
+
+        // Function to change results page
+        function changeResultsPage(delta) {
+            currentResultsPage += delta;
+            loadCorporateResults();
+        }
+
+        // Update the switchTab function
+        function switchTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabId).classList.add('active');
+            
+            // Update nav links
+            document.querySelectorAll('.market-nav a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + tabId) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Load data based on active tab
+            if (tabId === 'market') {
+                loadMarketIndices();
+                loadTopMovers();
+            } else if (tabId === 'insider') {
+                loadInsiderTradingData();
+            } else if (tabId === 'news') {
+                loadNewsItems(); // Load news by default when switching to news tab
+            }
+        }
+
+        // Helper function to format numbers
+        function formatNumber(num) {
+            if (!num) return '-';
+            return new Intl.NumberFormat('en-IN').format(num);
+        }
+
+        // Helper function to format dates
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-IN', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            });
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM Content Loaded');
+            
+            // Set default date for intraday data
+            document.getElementById('intradayDateInput').value = new Date().toISOString().split('T')[0];
+            
+            // Load initial tab data
+            switchTab('market');
+            
+            // Add event listeners for news tab
+            document.querySelector('a[href="#news"]').addEventListener('click', () => {
+                console.log('News tab clicked');
+                switchTab('news');
+                loadNewsItems();
+            });
+
+            // Initialize news pagination buttons
+            const prevButton = document.getElementById('newsPrevPage');
+            const nextButton = document.getElementById('newsNextPage');
+            
+            console.log('Initializing pagination buttons:');
+            console.log('Previous button:', prevButton);
+            console.log('Next button:', nextButton);
+            
+            if (prevButton && nextButton) {
+                prevButton.addEventListener('click', handlePrevClick);
+                nextButton.addEventListener('click', handleNextClick);
+                console.log('Event listeners attached to buttons');
+            }
+        });
+
+        // Function to toggle between gainers and losers
+        function togglePriceMovers(contentId, button) {
+            console.log('Toggle price movers:', contentId);
+            
+            // Update button states
+            document.querySelectorAll('.market-card .toggle-button').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            // Update content visibility
+            document.querySelectorAll('.market-card .content-section').forEach(section => section.classList.remove('active'));
+            document.getElementById(contentId).classList.add('active');
+        }
+    </script>
+</body>
+</html> 
