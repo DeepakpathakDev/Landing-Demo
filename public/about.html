@@ -1,1 +1,1029 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StockInsight - About Us</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#4f46e5',secondary:'#10b981'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+html {
+scroll-behavior: smooth;
+}
+body {
+background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+color: #f8fafc;
+min-height: 100vh;
+}
+.hero-wave {
+position: absolute;
+width: 100%;
+height: 120px;
+bottom: -50px;
+left: 0;
+z-index: 0;
+}
+.dashboard-glow {
+box-shadow: 0 0 30px rgba(79, 70, 229, 0.2);
+}
+.feature-card {
+background: rgba(30, 41, 59, 0.5);
+backdrop-filter: blur(10px);
+transition: all 0.3s ease;
+}
+.feature-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 10px 25px rgba(79, 70, 229, 0.15);
+}
+.testimonial-card {
+background: rgba(30, 41, 59, 0.5);
+backdrop-filter: blur(10px);
+}
+.client-logo {
+filter: grayscale(100%) brightness(2);
+opacity: 0.6;
+transition: all 0.3s ease;
+}
+.client-logo:hover {
+filter: grayscale(0%) brightness(2);
+opacity: 1;
+}
+.gradient-text {
+background: linear-gradient(90deg, #4f46e5, #10b981);
+-webkit-background-clip: text;
+background-clip: text;
+color: transparent;
+}
+input:focus {
+outline: none;
+}
+.animate-on-scroll {
+opacity: 0;
+transform: translateY(30px);
+transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.animate-on-scroll.visible {
+opacity: 1;
+transform: translateY(0);
+}
+.team-card {
+background: rgba(30, 41, 59, 0.5);
+backdrop-filter: blur(10px);
+transition: all 0.3s ease;
+}
+.team-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 10px 25px rgba(79, 70, 229, 0.15);
+}
+.timeline-item {
+position: relative;
+}
+.timeline-item::before {
+content: '';
+position: absolute;
+left: 0;
+top: 0;
+width: 1px;
+height: 100%;
+background: linear-gradient(to bottom, rgba(79, 70, 229, 0.5), rgba(16, 185, 129, 0.5));
+}
+.timeline-dot {
+position: absolute;
+left: -5px;
+top: 0;
+width: 10px;
+height: 10px;
+border-radius: 50%;
+background: #4f46e5;
+}
+</style>
+</head>
+<body>
+<!-- Header Navigation -->
+    <header
+      class="w-full py-4 px-6 md:px-12 fixed top-0 left-0 z-50 bg-slate-900/80 backdrop-blur-md"
+    >
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <a
+            href="index.html"
+            class="text-2xl font-['Pacifico'] text-white mr-2"
+            >logo</a
+          >
+        </div>
+        <nav class="hidden md:flex items-center space-x-8">
+          <a
+            href="index.html"
+            class="text-gray-300 hover:text-primary transition"
+            >Home</a
+          >
+          <a
+            href="about.html"
+            class="text-gray-300 hover:text-primary transition"
+            >About</a
+          >
+          <a href="market.html" class="text-white hover:text-primary transition"
+            >Market</a
+          >
+          <a
+            href="index.html#features"
+            class="text-gray-300 hover:text-primary transition"
+            >Features</a
+          >
+          <a
+            href="index.html#pricing"
+            class="text-gray-300 hover:text-primary transition"
+            >Pricing</a
+          >
+          <a
+            href="index.html#contact"
+            class="text-gray-300 hover:text-primary transition"
+            >Contact</a
+          >
+        </nav>
+        <div class="flex items-center">
+          <button
+            class="bg-gradient-to-r from-primary to-indigo-600 text-white px-6 py-2 !rounded-button whitespace-nowrap"
+          >
+            Sign In
+          </button>
+        </div>
+        <div class="md:hidden flex items-center">
+          <button id="mobileMenuButton" class="text-white">
+            <i class="ri-menu-line ri-2x"></i>
+          </button>
+        </div>
+      </div>
+      <div
+        id="mobileMenu"
+        class="hidden md:hidden absolute top-full left-0 w-full bg-slate-900/95 backdrop-blur-md"
+      >
+        <div class="flex flex-col p-4">
+          <a
+            href="index.html"
+            class="text-gray-300 hover:text-primary transition py-2"
+            >Home</a
+          >
+          <a
+            href="about.html"
+            class="text-gray-300 hover:text-primary transition py-2"
+            >About</a
+          >
+          <a
+            href="market.html"
+            class="text-white hover:text-primary transition py-2"
+            >Market</a
+          >
+          <a
+            href="index.html#features"
+            class="text-gray-300 hover:text-primary transition py-2"
+            >Features</a
+          >
+          <a
+            href="index.html#pricing"
+            class="text-gray-300 hover:text-primary transition py-2"
+            >Pricing</a
+          >
+          <a
+            href="index.html#contact"
+            class="text-gray-300 hover:text-primary transition py-2"
+            >Contact</a
+          >
+          <button
+            class="bg-gradient-to-r from-primary to-indigo-600 text-white px-6 py-2 !rounded-button whitespace-nowrap mt-4"
+          >
+            Sign In
+          </button>
+        </div>
+      </div>
+    </header><!-- About Hero Section -->
+<section class="relative w-full py-16 overflow-hidden pt-32">
+<div class="max-w-7xl mx-auto px-6 md:px-12">
+<div class="flex flex-col items-center text-center mb-12">
+<h1 class="text-4xl md:text-5xl font-bold mb-4">About <span class="gradient-text">StockInsight</span></h1>
+<p class="text-gray-300 text-lg mb-8 max-w-3xl mx-auto">We're on a mission to democratize financial data and empower investors with powerful, intuitive tools for making informed decisions.</p>
+</div>
+<div class="relative mt-8 dashboard-glow rounded-lg overflow-hidden z-10">
+<img src="https://public.readdy.ai/ai/img_res/0fdf4ac3b04b977b70430db834c2adde.jpg" alt="StockInsight Team" class="w-full h-auto rounded-lg object-cover">
+</div>
+</div>
+<div class="hero-wave">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none" class="w-full h-full">
+<path fill="rgba(30, 41, 59, 0.3)" fill-opacity="1" d="M0,96L48,112C96,128,192,160,288,181.3C384,203,480,213,576,202.7C672,192,768,160,864,165.3C960,171,1056,213,1152,213.3C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+</svg>
+</div>
+</section>
+
+<!-- Our Story Section -->
+<section class="w-full py-20 bg-slate-900/30">
+<div class="max-w-7xl mx-auto px-6 md:px-12">
+<div class="flex flex-col md:flex-row gap-12 items-center">
+<div class="w-full md:w-1/2">
+<h2 class="text-3xl font-bold mb-6">Our Story</h2>
+<p class="text-gray-300 mb-6">Founded in 2020, StockInsight was born from a simple observation: while financial data was abundant, truly useful insights were scarce and often inaccessible to everyday investors.</p>
+<p class="text-gray-300 mb-6">Our founders, a team of financial analysts and software engineers, set out to build a platform that would not only aggregate market data but transform it into actionable intelligence through advanced analytics and intuitive visualization.</p>
+<p class="text-gray-300">Today, StockInsight serves thousands of investors worldwide, from individual traders to institutional portfolio managers, all united by the desire to make smarter, data-driven investment decisions.</p>
+</div>
+<div class="w-full md:w-1/2 pl-0 md:pl-8">
+<div class="relative pl-8">
+<div class="timeline-item pb-8">
+<div class="timeline-dot"></div>
+<h3 class="text-xl font-semibold mb-2">2020</h3>
+<p class="text-gray-300">StockInsight founded in San Francisco with seed funding of $2.5M</p>
+</div>
+<div class="timeline-item pb-8">
+<div class="timeline-dot"></div>
+<h3 class="text-xl font-semibold mb-2">2021</h3>
+<p class="text-gray-300">Launch of beta platform with real-time data for US markets</p>
+</div>
+<div class="timeline-item pb-8">
+<div class="timeline-dot"></div>
+<h3 class="text-xl font-semibold mb-2">2022</h3>
+<p class="text-gray-300">Series A funding of $12M; expansion to global markets</p>
+</div>
+<div class="timeline-item pb-8">
+<div class="timeline-dot"></div>
+<h3 class="text-xl font-semibold mb-2">2023</h3>
+<p class="text-gray-300">Introduction of AI-powered market insights and predictions</p>
+</div>
+<div class="timeline-item">
+<div class="timeline-dot"></div>
+<h3 class="text-xl font-semibold mb-2">2024</h3>
+<p class="text-gray-300">Reached 100,000 active users; launched institutional platform</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Our Mission Section -->
+<section class="w-full py-20">
+<div class="max-w-7xl mx-auto px-6 md:px-12">
+<div class="text-center mb-16">
+<h2 class="text-3xl font-bold mb-4">Our Mission & Values</h2>
+<p class="text-gray-300 max-w-3xl mx-auto">We believe that access to high-quality financial data and analysis tools should be available to everyone, not just Wall Street professionals.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="feature-card p-8 rounded-lg text-center">
+<div class="w-16 h-16 flex items-center justify-center bg-primary/20 rounded-full mx-auto mb-6">
+<i class="ri-line-chart-line ri-xl text-primary"></i>
+</div>
+<h3 class="text-xl font-semibold mb-4">Data Integrity</h3>
+<p class="text-gray-300">We're committed to providing the most accurate, comprehensive, and timely market data possible.</p>
+</div>
+<div class="feature-card p-8 rounded-lg text-center">
+<div class="w-16 h-16 flex items-center justify-center bg-primary/20 rounded-full mx-auto mb-6">
+<i class="ri-user-heart-line ri-xl text-primary"></i>
+</div>
+<h3 class="text-xl font-semibold mb-4">User Empowerment</h3>
+<p class="text-gray-300">We design our tools to be powerful yet intuitive, making sophisticated analysis accessible to all.</p>
+</div>
+<div class="feature-card p-8 rounded-lg text-center">
+<div class="w-16 h-16 flex items-center justify-center bg-primary/20 rounded-full mx-auto mb-6">
+<i class="ri-shield-check-line ri-xl text-primary"></i>
+</div>
+<h3 class="text-xl font-semibold mb-4">Trust & Security</h3>
+<p class="text-gray-300">We safeguard your data with enterprise-grade security and never compromise on privacy.</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Team Section -->
+<section class="w-full py-20 bg-slate-900/30">
+<div class="max-w-7xl mx-auto px-6 md:px-12">
+<div class="text-center mb-16">
+<h2 class="text-3xl font-bold mb-4">Meet Our Leadership Team</h2>
+<p class="text-gray-300 max-w-3xl mx-auto">Our diverse team brings together expertise from finance, technology, and data science to build the future of investment analytics.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+<div class="team-card p-6 rounded-lg text-center">
+<div class="w-32 h-32 rounded-full overflow-hidden mx-auto mb-4">
+<img src="https://public.readdy.ai/ai/img_res/9b2490ace41de77c7746d6bdc5444081.jpg" alt="David Chen" class="w-full h-full object-cover">
+</div>
+<h3 class="text-xl font-semibold mb-1">David Chen</h3>
+<p class="text-primary mb-2">CEO & Co-Founder</p>
+<p class="text-gray-400 text-sm">Former VP at Goldman Sachs with 15+ years in quantitative trading</p>
+<div class="flex justify-center mt-4 space-x-3">
+<a href="#" class="text-gray-400 hover:text-primary">
+<i class="ri-linkedin-fill ri-lg"></i>
+</a>
+<a href="#" class="text-gray-400 hover:text-primary">
+<i class="ri-twitter-x-fill ri-lg"></i>
+</a>
+</div>
+</div>
+<div class="team-card p-6 rounded-lg text-center">
+<div class="w-32 h-32 rounded-full overflow-hidden mx-auto mb-4">
+<img src="https://public.readdy.ai/ai/img_res/7a1053d59435ca944811bb0fc1c4e87c.jpg" alt="Priya Sharma" class="w-full h-full object-cover">
+</div>
+<h3 class="text-xl font-semibold mb-1">Priya Sharma</h3>
+<p class="text-primary mb-2">CTO & Co-Founder</p>
+<p class="text-gray-400 text-sm">Ex-Google engineer specializing in machine learning and data visualization</p>
+<div class="flex justify-center mt-4 space-x-3">
+<a href="#" class="text-gray-400 hover:text-primary">
+<i class="ri-linkedin-fill ri-lg"></i>
+</a>
+<a href="#" class="text-gray-400 hover:text-primary">
+<i class="ri-github-fill ri-lg"></i>
+</a>
+</div>
+</div>
+<div class="team-card p-6 rounded-lg text-center">
+<div class="w-32 h-32 rounded-full overflow-hidden mx-auto mb-4">
+<img src="https://public.readdy.ai/ai/img_res/91b555a6c3bfdcd00938f7f55b72a210.jpg" alt="Marcus Johnson" class="w-full h-full object-cover">
+</div>
+<h3 class="text-xl font-semibold mb-1">Marcus Johnson</h3>
+<p class="text-primary mb-2">Chief Financial Officer</p>
+<p class="text-gray-400 text-sm">Former investment banker with expertise in fintech and capital markets</p>
+<div class="flex justify-center mt-4 space-x-3">
+<a href="#" class="text-gray-400 hover:text-primary">
+<i class="ri-linkedin-fill ri-lg"></i>
+</a>
+<a href="#" class="text-gray-400 hover:text-primary">
+<i class="ri-twitter-x-fill ri-lg"></i>
+</a>
+</div>
+</div>
+<div class="team-card p-6 rounded-lg text-center">
+<div class="w-32 h-32 rounded-full overflow-hidden mx-auto mb-4">
+<img src="https://public.readdy.ai/ai/img_res/0ef7903396730ca57b2faab2ed384c73.jpg" alt="Elena Rodriguez" class="w-full h-full object-cover">
+</div>
+<h3 class="text-xl font-semibold mb-1">Elena Rodriguez</h3>
+<p class="text-primary mb-2">Chief Product Officer</p>
+<p class="text-gray-400 text-sm">Product leader with experience at Robinhood and Bloomberg</p>
+<div class="flex justify-center mt-4 space-x-3">
+<a href="#" class="text-gray-400 hover:text-primary">
+<i class="ri-linkedin-fill ri-lg"></i>
+</a>
+<a href="#" class="text-gray-400 hover:text-primary">
+<i class="ri-dribbble-fill ri-lg"></i>
+</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Investors Section -->
+<section class="w-full py-20">
+<div class="max-w-7xl mx-auto px-6 md:px-12">
+<div class="text-center mb-16">
+<h2 class="text-3xl font-bold mb-4">Backed by World-Class Investors</h2>
+<p class="text-gray-300 max-w-3xl mx-auto">We're proud to partner with leading venture capital firms who share our vision for the future of financial technology.</p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-16">
+<div class="flex flex-col items-center">
+<div class="w-24 h-24 flex items-center justify-center mb-4">
+<i class="ri-vimeo-fill ri-4x client-logo"></i>
+</div>
+<p class="text-center text-gray-300 font-medium">Venture Partners</p>
+</div>
+<div class="flex flex-col items-center">
+<div class="w-24 h-24 flex items-center justify-center mb-4">
+<i class="ri-facebook-box-fill ri-4x client-logo"></i>
+</div>
+<p class="text-center text-gray-300 font-medium">Sequoia Capital</p>
+</div>
+<div class="flex flex-col items-center">
+<div class="w-24 h-24 flex items-center justify-center mb-4">
+<i class="ri-google-fill ri-4x client-logo"></i>
+</div>
+<p class="text-center text-gray-300 font-medium">GV</p>
+</div>
+<div class="flex flex-col items-center">
+<div class="w-24 h-24 flex items-center justify-center mb-4">
+<i class="ri-amazon-fill ri-4x client-logo"></i>
+</div>
+<p class="text-center text-gray-300 font-medium">Andreessen Horowitz</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Office Locations Section -->
+<section class="w-full py-20 bg-slate-900/30">
+<div class="max-w-7xl mx-auto px-6 md:px-12">
+<div class="text-center mb-16">
+<h2 class="text-3xl font-bold mb-4">Our Global Presence</h2>
+<p class="text-gray-300 max-w-3xl mx-auto">With offices in major financial hubs around the world, we're building a truly global platform for investors everywhere.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<div class="feature-card p-6 rounded-lg">
+<div class="w-full h-48 rounded-lg overflow-hidden mb-4">
+<img src="https://public.readdy.ai/ai/img_res/a8bedcd134ec2f2fa45096904d4fbd0e.jpg" alt="San Francisco Office" class="w-full h-full object-cover">
+</div>
+<h3 class="text-xl font-semibold mb-2">San Francisco</h3>
+<p class="text-gray-300 mb-4">Our headquarters and main engineering hub</p>
+<div class="flex items-start">
+<div class="w-5 h-5 flex items-center justify-center text-primary mr-2">
+<i class="ri-map-pin-line"></i>
+</div>
+<p class="text-gray-400">101 Market Street, Suite 700<br>San Francisco, CA 94105</p>
+</div>
+</div>
+<div class="feature-card p-6 rounded-lg">
+<div class="w-full h-48 rounded-lg overflow-hidden mb-4">
+<img src="https://public.readdy.ai/ai/img_res/b267565e7f43b50a906b6ab84a13bb19.jpg" alt="New York Office" class="w-full h-full object-cover">
+</div>
+<h3 class="text-xl font-semibold mb-2">New York</h3>
+<p class="text-gray-300 mb-4">Our East Coast office focused on financial partnerships</p>
+<div class="flex items-start">
+<div class="w-5 h-5 flex items-center justify-center text-primary mr-2">
+<i class="ri-map-pin-line"></i>
+</div>
+<p class="text-gray-400">350 Fifth Avenue, 21st Floor<br>New York, NY 10118</p>
+</div>
+</div>
+<div class="feature-card p-6 rounded-lg">
+<div class="w-full h-48 rounded-lg overflow-hidden mb-4">
+<img src="https://public.readdy.ai/ai/img_res/26688516344451bac1c4126c5f4daf06.jpg" alt="London Office" class="w-full h-full object-cover">
+</div>
+<h3 class="text-xl font-semibold mb-2">London</h3>
+<p class="text-gray-300 mb-4">Our European headquarters serving EMEA markets</p>
+<div class="flex items-start">
+<div class="w-5 h-5 flex items-center justify-center text-primary mr-2">
+<i class="ri-map-pin-line"></i>
+</div>
+<p class="text-gray-400">1 Canada Square, Canary Wharf<br>London E14 5AB, UK</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Join Us CTA Section -->
+<section class="w-full py-20">
+<div class="max-w-4xl mx-auto px-6 md:px-12 text-center">
+<h2 class="text-3xl font-bold mb-6">Join Our Growing Team</h2>
+<p class="text-gray-300 mb-8 max-w-2xl mx-auto">We're always looking for talented individuals who are passionate about fintech and want to make a difference in how people invest.</p>
+<div class="bg-slate-800/50 rounded-lg p-8 mb-8">
+<h3 class="text-xl font-semibold mb-4">Current Openings</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-slate-700/50 p-4 rounded-lg">
+<h4 class="font-semibold mb-1">Senior Frontend Engineer</h4>
+<p class="text-gray-400 text-sm mb-2">San Francisco, CA</p>
+<button class="text-primary text-sm hover:underline">View Details</button>
+</div>
+<div class="bg-slate-700/50 p-4 rounded-lg">
+<h4 class="font-semibold mb-1">Data Scientist</h4>
+<p class="text-gray-400 text-sm mb-2">New York, NY</p>
+<button class="text-primary text-sm hover:underline">View Details</button>
+</div>
+<div class="bg-slate-700/50 p-4 rounded-lg">
+<h4 class="font-semibold mb-1">Product Manager</h4>
+<p class="text-gray-400 text-sm mb-2">London, UK</p>
+<button class="text-primary text-sm hover:underline">View Details</button>
+</div>
+<div class="bg-slate-700/50 p-4 rounded-lg">
+<h4 class="font-semibold mb-1">Financial Analyst</h4>
+<p class="text-gray-400 text-sm mb-2">Remote</p>
+<button class="text-primary text-sm hover:underline">View Details</button>
+</div>
+</div>
+</div>
+<button class="bg-gradient-to-r from-primary to-indigo-600 text-white px-8 py-3 !rounded-button whitespace-nowrap">View All Positions</button>
+</div>
+</section>
+<!-- Footer -->
+<footer id="contact" class="w-full py-12 bg-slate-900/50">
+<div class="max-w-7xl mx-auto px-6 md:px-12">
+<div class="flex flex-col md:flex-row justify-between items-center mb-8">
+<div class="flex items-center mb-6 md:mb-0">
+<a href="index.html" class="text-2xl font-['Pacifico'] text-white mr-2">logo</a>
+<span class="text-sm text-gray-400">Finance Theme</span>
+</div>
+<nav class="flex flex-wrap justify-center gap-x-8 gap-y-4">
+<a href="index.html" class="text-gray-300 hover:text-primary transition">Home</a>
+<a href="about.html" class="text-gray-300 hover:text-primary transition">About</a>
+<a href="index.html#features" class="text-gray-300 hover:text-primary transition">Features</a>
+<a href="index.html#pricing" class="text-gray-300 hover:text-primary transition">Pricing</a>
+<a href="index.html#contact" class="text-gray-300 hover:text-primary transition">Contact</a>
+</nav>
+<button class="bg-gradient-to-r from-primary to-indigo-600 text-white px-6 py-2 !rounded-button whitespace-nowrap mt-6 md:mt-0">Sign In</button>
+</div>
+<div class="border-t border-gray-700 pt-8">
+<div class="flex flex-col md:flex-row justify-between items-center">
+<p class="text-gray-400 text-sm mb-4 md:mb-0">© 2025 StockInsight. All rights reserved.</p>
+<div class="flex space-x-6">
+<a href="#" class="text-gray-400 hover:text-primary">
+<i class="ri-twitter-x-line ri-lg"></i>
+</a>
+<a href="#" class="text-gray-400 hover:text-primary">
+<i class="ri-linkedin-line ri-lg"></i>
+</a>
+<a href="#" class="text-gray-400 hover:text-primary">
+<i class="ri-facebook-line ri-lg"></i>
+</a>
+<a href="#" class="text-gray-400 hover:text-primary">
+<i class="ri-instagram-line ri-lg"></i>
+</a>
+</div>
+</div>
+</div>
+</div>
+</footer>
+<script>
+// Mobile menu toggle
+document.addEventListener('DOMContentLoaded', function() {
+const mobileMenuButton = document.getElementById('mobileMenuButton');
+const mobileMenu = document.getElementById('mobileMenu');
+mobileMenuButton.addEventListener('click', function() {
+if (mobileMenu.classList.contains('hidden')) {
+mobileMenu.classList.remove('hidden');
+mobileMenu.classList.add('block');
+} else {
+mobileMenu.classList.remove('block');
+mobileMenu.classList.add('hidden');
+}
+});
+
+// Animation on scroll
+const animatedElements = document.querySelectorAll('.team-card, .feature-card');
+animatedElements.forEach(element => {
+element.classList.add('animate-on-scroll');
+});
+
+function checkVisibility() {
+const elements = document.querySelectorAll('.animate-on-scroll');
+elements.forEach(element => {
+const rect = element.getBoundingClientRect();
+const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+if (rect.top <= windowHeight * 0.8) {
+element.classList.add('visible');
+}
+});
+}
+
+// Initial check
+checkVisibility();
+
+// Check on scroll
+window.addEventListener('scroll', checkVisibility);
+});
+</script>
+</body>
+</html>
+<!-- Data Visualization Section -->
+<section id="about" class="w-full py-20">
+<div class="max-w-7xl mx-auto px-6 md:px-12">
+<div class="flex flex-col md:flex-row gap-12 items-center">
+<div class="w-full md:w-1/2">
+<h2 class="text-3xl font-bold mb-6">Advanced market analysis at your fingertips</h2>
+<p class="text-gray-300 mb-6">Our platform provides comprehensive tools for technical and fundamental analysis, helping you make data-driven investment decisions.</p>
+<div class="space-y-4 mb-8">
+<div class="flex items-start">
+<div class="w-6 h-6 flex items-center justify-center text-primary mr-3 mt-1">
+<i class="ri-check-line ri-lg"></i>
+</div>
+<div>
+<h4 class="font-semibold mb-1">Technical Analysis Tools</h4>
+<p class="text-gray-400">Over 100+ technical indicators and drawing tools</p>
+</div>
+</div>
+<div class="flex items-start">
+<div class="w-6 h-6 flex items-center justify-center text-primary mr-3 mt-1">
+<i class="ri-check-line ri-lg"></i>
+</div>
+<div>
+<h4 class="font-semibold mb-1">Fundamental Data</h4>
+<p class="text-gray-400">Financial statements, earnings reports, and key metrics</p>
+</div>
+</div>
+<div class="flex items-start">
+<div class="w-6 h-6 flex items-center justify-center text-primary mr-3 mt-1">
+<i class="ri-check-line ri-lg"></i>
+</div>
+<div>
+<h4 class="font-semibold mb-1">AI-Powered Insights</h4>
+<p class="text-gray-400">Machine learning algorithms to identify patterns and trends</p>
+</div>
+</div>
+</div>
+<button class="bg-gradient-to-r from-primary to-indigo-600 text-white px-6 py-3 !rounded-button whitespace-nowrap">Explore features</button>
+</div>
+<div class="w-full md:w-1/2 h-[400px]" id="stockChart"></div>
+</div>
+</div>
+</section>
+<!-- Market Overview Section -->
+<section class="w-full py-20 bg-slate-900/30">
+<div class="max-w-7xl mx-auto px-6 md:px-12">
+<div class="text-center mb-12">
+<h2 class="text-3xl font-bold mb-4">Stay on top of the market</h2>
+<p class="text-gray-300 max-w-2xl mx-auto">Track market indices, top movers, and your personalized watchlist in real-time</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Market Indices -->
+<div class="bg-slate-800/50 rounded-lg p-6">
+<h3 class="text-xl font-semibold mb-4">Market Indices</h3>
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<div>
+<span class="font-medium">S&P 500</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-semibold">5,218.19</span>
+<span class="text-green-500 text-sm">+0.98%</span>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div>
+<span class="font-medium">NASDAQ</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-semibold">16,429.45</span>
+<span class="text-green-500 text-sm">+1.25%</span>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div>
+<span class="font-medium">DOW JONES</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-semibold">38,764.31</span>
+<span class="text-red-500 text-sm">-0.12%</span>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div>
+<span class="font-medium">FTSE 100</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-semibold">8,145.63</span>
+<span class="text-green-500 text-sm">+0.45%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Top Gainers -->
+<div class="bg-slate-800/50 rounded-lg p-6">
+<h3 class="text-xl font-semibold mb-4">Top Gainers</h3>
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<div>
+<span class="font-medium">NVDA</span>
+<p class="text-xs text-gray-400">NVIDIA Corp</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-semibold">$942.89</span>
+<span class="text-green-500 text-sm">+4.58%</span>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div>
+<span class="font-medium">TSLA</span>
+<p class="text-xs text-gray-400">Tesla Inc</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-semibold">$178.21</span>
+<span class="text-green-500 text-sm">+3.92%</span>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div>
+<span class="font-medium">AMD</span>
+<p class="text-xs text-gray-400">Advanced Micro Devices</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-semibold">$164.78</span>
+<span class="text-green-500 text-sm">+3.45%</span>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div>
+<span class="font-medium">AAPL</span>
+<p class="text-xs text-gray-400">Apple Inc</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-semibold">$189.98</span>
+<span class="text-green-500 text-sm">+2.87%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Your Watchlist -->
+<div class="bg-slate-800/50 rounded-lg p-6">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-xl font-semibold">Your Watchlist</h3>
+<button class="text-primary">
+<i class="ri-add-line ri-lg"></i>
+</button>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<div>
+<span class="font-medium">MSFT</span>
+<p class="text-xs text-gray-400">Microsoft Corp</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-semibold">$425.52</span>
+<span class="text-green-500 text-sm">+1.23%</span>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div>
+<span class="font-medium">AMZN</span>
+<p class="text-xs text-gray-400">Amazon.com Inc</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-semibold">$182.30</span>
+<span class="text-red-500 text-sm">-0.45%</span>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div>
+<span class="font-medium">GOOGL</span>
+<p class="text-xs text-gray-400">Alphabet Inc</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-semibold">$176.89</span>
+<span class="text-green-500 text-sm">+0.78%</span>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div>
+<span class="font-medium">META</span>
+<p class="text-xs text-gray-400">Meta Platforms Inc</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-semibold">$498.72</span>
+<span class="text-green-500 text-sm">+2.14%</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Testimonials Section -->
+<section class="w-full py-20">
+<div class="max-w-7xl mx-auto px-6 md:px-12">
+<h2 class="text-3xl font-bold text-center mb-16">Testimonials</h2>
+<div class="testimonial-card p-8 rounded-xl max-w-4xl mx-auto relative">
+<div class="absolute -top-6 left-1/2 transform -translate-x-1/2">
+<div class="w-16 h-16 rounded-full overflow-hidden border-4 border-primary">
+<img src="https://public.readdy.ai/ai/img_res/8e3020995f841c8de71dcab5bdbb739b.jpg" alt="Client Portrait" class="w-full h-full object-cover">
+</div>
+</div>
+<div class="text-center pt-10">
+<div class="flex justify-center mb-4">
+<i class="ri-double-quotes-l ri-2x text-primary opacity-50"></i>
+</div>
+<p class="text-gray-300 text-lg mb-6">StockInsight has transformed how I analyze market data. The real-time updates and AI-powered insights have helped me identify opportunities I would have otherwise missed. The platform is intuitive and provides all the tools I need to make informed investment decisions.</p>
+<div>
+<h4 class="font-semibold">Michael Chen</h4>
+<p class="text-gray-400 text-sm">Senior Portfolio Manager, Horizon Capital</p>
+</div>
+</div>
+<div class="flex justify-center mt-8 space-x-2">
+<button class="w-2 h-2 rounded-full bg-gray-600"></button>
+<button class="w-2 h-2 rounded-full bg-primary"></button>
+<button class="w-2 h-2 rounded-full bg-gray-600"></button>
+</div>
+</div>
+</div>
+</section>
+<!-- Clients Section -->
+<section class="w-full py-16 bg-slate-900/30">
+<div class="max-w-7xl mx-auto px-6 md:px-12">
+<h2 class="text-2xl font-bold text-center mb-12">Our Clients</h2>
+<div class="flex flex-wrap justify-center items-center gap-8 md:gap-16">
+<div class="w-24 h-16 flex items-center justify-center">
+<i class="ri-visa-line ri-3x client-logo"></i>
+</div>
+<div class="w-24 h-16 flex items-center justify-center">
+<i class="ri-mastercard-line ri-3x client-logo"></i>
+</div>
+<div class="w-24 h-16 flex items-center justify-center">
+<i class="ri-paypal-line ri-3x client-logo"></i>
+</div>
+<div class="w-24 h-16 flex items-center justify-center">
+<i class="ri-amazon-line ri-3x client-logo"></i>
+</div>
+<div class="w-24 h-16 flex items-center justify-center">
+<i class="ri-apple-line ri-3x client-logo"></i>
+</div>
+</div>
+</div>
+</section>
+<!-- Pricing CTA Section -->
+<section id="pricing" class="w-full py-20">
+<div class="max-w-3xl mx-auto px-6 md:px-12 text-center">
+<h2 class="text-3xl font-bold mb-4">The <span class="gradient-text">StockInsight</span> plan starts from $19.99</h2>
+<p class="text-gray-300 mb-8">Find the plan that's right for you</p>
+<button class="bg-gradient-to-r from-primary to-indigo-600 text-white px-8 py-3 !rounded-button whitespace-nowrap">Show plans</button>
+</div>
+</section>
+<!-- Footer -->
+<footer id="contact" class="w-full py-12 bg-slate-900/50">
+<div class="max-w-7xl mx-auto px-6 md:px-12">
+<div class="flex flex-col md:flex-row justify-between items-center mb-8">
+<div class="flex items-center mb-6 md:mb-0">
+<span class="text-2xl font-['Pacifico'] text-white mr-2">logo</span>
+<span class="text-sm text-gray-400">Finance Theme</span>
+</div>
+<nav class="flex flex-wrap justify-center gap-x-8 gap-y-4">
+<a href="#home" class="text-gray-300 hover:text-primary transition">Home</a>
+<a href="#about" class="text-gray-300 hover:text-primary transition">About</a>
+<a href="#features" class="text-gray-300 hover:text-primary transition">Features</a>
+<a href="#pricing" class="text-gray-300 hover:text-primary transition">Pricing</a>
+<a href="#contact" class="text-gray-300 hover:text-primary transition">Contact</a>
+</nav>
+<button class="bg-gradient-to-r from-primary to-indigo-600 text-white px-6 py-2 !rounded-button whitespace-nowrap mt-6 md:mt-0">Sign In</button>
+</div>
+<div class="border-t border-gray-700 pt-8">
+<div class="flex flex-col md:flex-row justify-between items-center">
+<p class="text-gray-400 text-sm mb-4 md:mb-0">© 2025 StockInsight. All rights reserved.</p>
+<div class="flex space-x-6">
+<a href="#" class="text-gray-400 hover:text-primary">
+<i class="ri-twitter-x-line ri-lg"></i>
+</a>
+<a href="#" class="text-gray-400 hover:text-primary">
+<i class="ri-linkedin-line ri-lg"></i>
+</a>
+<a href="#" class="text-gray-400 hover:text-primary">
+<i class="ri-facebook-line ri-lg"></i>
+</a>
+<a href="#" class="text-gray-400 hover:text-primary">
+<i class="ri-instagram-line ri-lg"></i>
+</a>
+</div>
+</div>
+</div>
+</div>
+</footer>
+<script>
+// Initialize the stock chart
+const chartDom = document.getElementById('stockChart');
+const myChart = echarts.init(chartDom);
+const option = {
+animation: false,
+tooltip: {
+trigger: 'axis',
+backgroundColor: 'rgba(255, 255, 255, 0.8)',
+textStyle: {
+color: '#1f2937'
+}
+},
+grid: {
+left: '3%',
+right: '3%',
+bottom: '3%',
+top: '3%',
+containLabel: true
+},
+xAxis: {
+type: 'category',
+data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+axisLine: {
+lineStyle: {
+color: '#475569'
+}
+},
+axisLabel: {
+color: '#94a3b8'
+}
+},
+yAxis: {
+type: 'value',
+axisLine: {
+lineStyle: {
+color: '#475569'
+}
+},
+splitLine: {
+lineStyle: {
+color: '#334155',
+type: 'dashed'
+}
+},
+axisLabel: {
+color: '#94a3b8'
+}
+},
+series: [
+{
+name: 'AAPL',
+type: 'line',
+smooth: true,
+lineStyle: {
+width: 3,
+color: 'rgba(87, 181, 231, 1)'
+},
+areaStyle: {
+color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+{
+offset: 0,
+color: 'rgba(87, 181, 231, 0.3)'
+},
+{
+offset: 1,
+color: 'rgba(87, 181, 231, 0.1)'
+}
+])
+},
+data: [168, 170, 175, 169, 173, 179, 182, 189, 185, 183, 187, 190]
+},
+{
+name: 'MSFT',
+type: 'line',
+smooth: true,
+lineStyle: {
+width: 3,
+color: 'rgba(141, 211, 199, 1)'
+},
+areaStyle: {
+color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+{
+offset: 0,
+color: 'rgba(141, 211, 199, 0.3)'
+},
+{
+offset: 1,
+color: 'rgba(141, 211, 199, 0.1)'
+}
+])
+},
+data: [390, 395, 405, 410, 408, 415, 425, 430, 420, 418, 422, 425]
+}
+]
+};
+myChart.setOption(option);
+// Responsive chart
+window.addEventListener('resize', function() {
+myChart.resize();
+});
+// Scroll animation
+document.addEventListener('DOMContentLoaded', function() {
+// Add animation class to elements
+const sections = document.querySelectorAll('section');
+sections.forEach(section => {
+section.classList.add('animate-on-scroll');
+});
+const featureCards = document.querySelectorAll('.feature-card');
+featureCards.forEach(card => {
+card.classList.add('animate-on-scroll');
+});
+const testimonialCard = document.querySelector('.testimonial-card');
+if (testimonialCard) testimonialCard.classList.add('animate-on-scroll');
+// Check if elements are in viewport
+function checkVisibility() {
+const elements = document.querySelectorAll('.animate-on-scroll');
+elements.forEach(element => {
+const rect = element.getBoundingClientRect();
+const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+if (rect.top <= windowHeight * 0.8) {
+element.classList.add('visible');
+}
+});
+}
+// Initial check
+checkVisibility();
+// Check on scroll
+window.addEventListener('scroll', checkVisibility);
+// Smooth scrolling for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+anchor.addEventListener('click', function(e) {
+e.preventDefault();
+const targetId = this.getAttribute('href');
+const targetElement = document.querySelector(targetId);
+if (targetElement) {
+const headerHeight = document.querySelector('header').offsetHeight;
+window.scrollTo({
+top: targetElement.offsetTop - headerHeight,
+behavior: 'smooth'
+});
+// Close mobile menu if open
+const mobileMenu = document.getElementById('mobileMenu');
+if (mobileMenu.classList.contains('block')) {
+mobileMenu.classList.remove('block');
+mobileMenu.classList.add('hidden');
+}
+}
+});
+});
+// Mobile menu toggle
+const mobileMenuButton = document.getElementById('mobileMenuButton');
+const mobileMenu = document.getElementById('mobileMenu');
+mobileMenuButton.addEventListener('click', function() {
+if (mobileMenu.classList.contains('hidden')) {
+mobileMenu.classList.remove('hidden');
+mobileMenu.classList.add('block');
+} else {
+mobileMenu.classList.remove('block');
+mobileMenu.classList.add('hidden');
+}
+});
+});
+</script>
+</body>
+</html>
